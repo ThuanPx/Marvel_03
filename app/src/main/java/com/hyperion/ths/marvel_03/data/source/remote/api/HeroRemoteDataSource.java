@@ -1,7 +1,7 @@
 package com.hyperion.ths.marvel_03.data.source.remote.api;
 
 import com.hyperion.ths.marvel_03.data.model.CharactersList;
-import com.hyperion.ths.marvel_03.data.model.Heroes;
+import com.hyperion.ths.marvel_03.data.model.Hero;
 import com.hyperion.ths.marvel_03.data.source.remote.HeroDataSource;
 import com.hyperion.ths.marvel_03.data.source.remote.api.service.MarvelApi;
 import io.reactivex.Observable;
@@ -20,11 +20,11 @@ public class HeroRemoteDataSource extends BaseRemoteDataSource
     }
 
     @Override
-    public Observable<List<Heroes>> getAllCharacters(Long ts, String keyApi, String hash) {
+    public Observable<List<Hero>> getAllCharacters(Long ts, String keyApi, String hash) {
         return mMarvelApi.getCharacters(ts, keyApi, hash)
-                .flatMap(new Function<CharactersList, Observable<List<Heroes>>>() {
+                .flatMap(new Function<CharactersList, Observable<List<Hero>>>() {
                     @Override
-                    public Observable<List<Heroes>> apply(@NonNull CharactersList charactersList)
+                    public Observable<List<Hero>> apply(@NonNull CharactersList charactersList)
                             throws Exception {
                         if (charactersList != null) {
                             return Observable.just(charactersList.getHeroesLists().getHeroes());

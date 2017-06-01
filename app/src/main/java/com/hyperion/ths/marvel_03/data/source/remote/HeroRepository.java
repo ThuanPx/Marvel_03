@@ -1,6 +1,6 @@
 package com.hyperion.ths.marvel_03.data.source.remote;
 
-import com.hyperion.ths.marvel_03.data.model.Heroes;
+import com.hyperion.ths.marvel_03.data.model.Hero;
 import io.reactivex.Observable;
 import java.util.List;
 
@@ -15,7 +15,7 @@ public class HeroRepository {
         mRemoteDataSource = remoteDataSource;
     }
 
-    public Observable<List<Heroes>> getAllHero(long ts, String keyApi, String hash) {
+    public Observable<List<Hero>> getAllHero(long ts, String keyApi, String hash) {
         return mRemoteDataSource.getAllCharacters(ts, keyApi, hash);
     }
 }

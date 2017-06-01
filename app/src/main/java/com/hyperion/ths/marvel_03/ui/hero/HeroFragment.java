@@ -3,6 +3,7 @@ package com.hyperion.ths.marvel_03.ui.hero;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import com.hyperion.ths.marvel_03.data.source.remote.api.HeroRemoteDataSource;
 import com.hyperion.ths.marvel_03.data.source.remote.api.service.MarvelServiceClient;
 import com.hyperion.ths.marvel_03.databinding.FragmentHeroBinding;
 import com.hyperion.ths.marvel_03.utils.rx.SchedulerProvider;
+import java.io.UnsupportedEncodingException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,13 +32,10 @@ public class HeroFragment extends Fragment {
                 DataBindingUtil.inflate(inflater, R.layout.fragment_hero, container, false);
         HeroRepository heroRepository =
                 new HeroRepository(new HeroRemoteDataSource(MarvelServiceClient.getInstance()));
-
-        mHeroViewModel = new HeroViewModel(heroRepository);
-
+        HeroFragmentAdapter heroFragmentAdapter = new HeroFragmentAdapter(getActivity());
+        mHeroViewModel = new HeroViewModel(heroRepository, heroFragmentAdapter);
         mHeroViewModel.setBaseSchedulerProvider(SchedulerProvider.getInstance());
-
         View view = fragmentHeroBinding.getRoot();
-
         fragmentHeroBinding.setViewModel(mHeroViewModel);
 
         return view;
@@ -46,5 +45,15 @@ public class HeroFragment extends Fragment {
     public void onStop() {
         super.onStop();
         mHeroViewModel.onStop();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        try {
+            mHeroViewModel.getAllHeroes();
+        } catch (UnsupportedEncodingException e) {
+            Log.e("Error ", e.getLocalizedMessage());
+        }
     }
 }

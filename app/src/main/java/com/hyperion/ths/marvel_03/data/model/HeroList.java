@@ -15,12 +15,12 @@ public class HeroList implements Parcelable {
     private int mTotal;
     private int mCount;
     @SerializedName("results")
-    private List<Heroes> mHeroes;
+    private List<Hero> mHeroes;
 
     public HeroList() {
     }
 
-    public HeroList(int offset, int limit, int total, int count, List<Heroes> heroes) {
+    public HeroList(int offset, int limit, int total, int count, List<Hero> heroes) {
 
         this.mOffset = offset;
         this.mLimit = limit;
@@ -34,7 +34,7 @@ public class HeroList implements Parcelable {
         mLimit = in.readInt();
         mTotal = in.readInt();
         mCount = in.readInt();
-        mHeroes = in.createTypedArrayList(Heroes.CREATOR);
+        mHeroes = in.createTypedArrayList(Hero.CREATOR);
     }
 
     public static final Creator<HeroList> CREATOR = new Creator<HeroList>() {
@@ -81,11 +81,11 @@ public class HeroList implements Parcelable {
         this.mCount = count;
     }
 
-    public List<Heroes> getHeroes() {
+    public List<Hero> getHeroes() {
         return mHeroes;
     }
 
-    public void setHeroes(List<Heroes> heroes) {
+    public void setHeroes(List<Hero> heroes) {
         mHeroes = heroes;
     }
 

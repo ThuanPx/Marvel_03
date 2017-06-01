@@ -18,6 +18,7 @@ public final class Constant {
     public static final String END_POINT_URL = "https://gateway.marvel.com";
     public static final String PUBLIC_KEY = "4582ff7d7509676253b6bc474a0020fb";
     public static final String PRIVATE_KEY = "4acceb2f9d2ab768c604c81a5f371b2e114b554e";
+    public static final String IMAGEFORMAT = "/portrait_xlarge.jpg";
     public static final long TIMESTAMP = 131710;
     public static final int CONNECTION_TIMEOUT = 60;
 

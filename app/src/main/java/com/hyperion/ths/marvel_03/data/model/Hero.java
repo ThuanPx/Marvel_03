@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by ths on 28/05/2017.
  */
 
-public class Heroes implements Parcelable {
+public class Hero implements Parcelable {
     @SerializedName("id")
     private int mId;
     @SerializedName("name")
@@ -18,22 +18,22 @@ public class Heroes implements Parcelable {
     @SerializedName("thumbnail")
     private ImageHero mImageHero;
 
-    protected Heroes(Parcel in) {
+    protected Hero(Parcel in) {
         mId = in.readInt();
         mName = in.readString();
         mDescription = in.readString();
         mImageHero = in.readParcelable(ImageHero.class.getClassLoader());
     }
 
-    public static final Creator<Heroes> CREATOR = new Creator<Heroes>() {
+    public static final Creator<Hero> CREATOR = new Creator<Hero>() {
         @Override
-        public Heroes createFromParcel(Parcel in) {
-            return new Heroes(in);
+        public Hero createFromParcel(Parcel in) {
+            return new Hero(in);
         }
 
         @Override
-        public Heroes[] newArray(int size) {
-            return new Heroes[size];
+        public Hero[] newArray(int size) {
+            return new Hero[size];
         }
     };
 

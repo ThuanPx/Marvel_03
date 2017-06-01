@@ -8,4 +8,7 @@
     <dimen name="dp_3">3dp</dimen>
     <dimen name="sp_12">12sp</dimen>
     <dimen name="dp_0">0dp</dimen>
+    <dimen name="dp_5">5dp</dimen>
+    <dimen name="dp_160">160dp</dimen>
+    <dimen name="sp_17">17sp</dimen>
 </resources>
