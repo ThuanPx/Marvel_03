@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import com.hyperion.ths.marvel_03.R;
 import com.hyperion.ths.marvel_03.data.model.Hero;
 import com.hyperion.ths.marvel_03.databinding.ItemFragmentHeroBinding;
+import com.hyperion.ths.marvel_03.ui.BaseRecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,9 +18,22 @@ import java.util.List;
 
 public class HeroFragmentAdapter extends RecyclerView.Adapter<HeroFragmentAdapter.ItemViewHolder> {
     private List<Hero> mHeroList;
+    private BaseRecyclerView.OnRecyclerViewItemClickListener<Hero> mOnRecyclerViewItemClickListener;
+    private BaseRecyclerView.OnItemButtonClickListener<Hero> mOnItemButtonClickListener;
 
     public HeroFragmentAdapter(Context context) {
         mHeroList = new ArrayList<>();
+    }
+
+    public void setOnRecyclerViewItemClickListener(
+            BaseRecyclerView.OnRecyclerViewItemClickListener<Hero>
+                    onRecyclerViewItemClickListener) {
+        mOnRecyclerViewItemClickListener = onRecyclerViewItemClickListener;
+    }
+
+    public void setOnItemButtonClickListener(
+            BaseRecyclerView.OnItemButtonClickListener<Hero> onItemButtonClickListener) {
+        mOnItemButtonClickListener = onItemButtonClickListener;
     }
 
     public void updateData(List<Hero> heroList) {
@@ -32,7 +46,8 @@ public class HeroFragmentAdapter extends RecyclerView.Adapter<HeroFragmentAdapte
         ItemFragmentHeroBinding itemFragmentHeroBinding =
                 DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()),
                         R.layout.item_fragment_hero, parent, false);
-        return new ItemViewHolder(itemFragmentHeroBinding);
+        return new ItemViewHolder(itemFragmentHeroBinding, mOnRecyclerViewItemClickListener,
+                mOnItemButtonClickListener);
     }
 
     @Override
@@ -50,14 +65,24 @@ public class HeroFragmentAdapter extends RecyclerView.Adapter<HeroFragmentAdapte
      */
     static class ItemViewHolder extends RecyclerView.ViewHolder {
         private ItemFragmentHeroBinding mItemFragmentHeroBinding;
+        private BaseRecyclerView.OnRecyclerViewItemClickListener<Hero>
+                mOnRecyclerViewItemClickListener;
+        private BaseRecyclerView.OnItemButtonClickListener<Hero> mOnItemButtonClickListener;
 
-        ItemViewHolder(ItemFragmentHeroBinding itemFragmentHeroBinding) {
-            super(itemFragmentHeroBinding.getRoot());
-            mItemFragmentHeroBinding = itemFragmentHeroBinding;
+        ItemViewHolder(ItemFragmentHeroBinding binding,
+                BaseRecyclerView.OnRecyclerViewItemClickListener<Hero>
+                        onRecyclerViewItemClickListener,
+                BaseRecyclerView.OnItemButtonClickListener<Hero> onItemButtonClickListener) {
+            super(binding.getRoot());
+            mItemFragmentHeroBinding = binding;
+            mOnRecyclerViewItemClickListener = onRecyclerViewItemClickListener;
+            mOnItemButtonClickListener = onItemButtonClickListener;
         }
 
         void bindData(Hero hero) {
-            mItemFragmentHeroBinding.setViewModel(new ItemHeroFragmentViewModel(hero));
+            mItemFragmentHeroBinding.setViewModel(
+                    new ItemHeroFragmentViewModel(hero, mOnRecyclerViewItemClickListener,
+                            mOnItemButtonClickListener));
             mItemFragmentHeroBinding.executePendingBindings();
         }
     }

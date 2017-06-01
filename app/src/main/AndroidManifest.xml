@@ -3,6 +3,7 @@
     package="com.hyperion.ths.marvel_03">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:name=".MainApplication"
         android:allowBackup="true"

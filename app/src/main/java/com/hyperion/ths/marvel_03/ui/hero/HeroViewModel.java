@@ -4,8 +4,10 @@ import android.support.v7.widget.GridLayoutManager;
 import android.util.Log;
 import com.hyperion.ths.marvel_03.data.model.Hero;
 import com.hyperion.ths.marvel_03.data.source.remote.HeroRepository;
+import com.hyperion.ths.marvel_03.ui.BaseRecyclerView;
 import com.hyperion.ths.marvel_03.ui.BaseViewModel;
 import com.hyperion.ths.marvel_03.utils.Constant;
+import com.hyperion.ths.marvel_03.utils.navigator.Navigator;
 import com.hyperion.ths.marvel_03.utils.rx.BaseSchedulerProvider;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
@@ -17,16 +19,23 @@ import java.util.List;
  * Created by ths on 31/05/2017.
  */
 
-public class HeroViewModel extends BaseViewModel {
+public class HeroViewModel extends BaseViewModel
+        implements BaseRecyclerView.OnRecyclerViewItemClickListener<Hero>,
+        BaseRecyclerView.OnItemButtonClickListener<Hero> {
     private HeroRepository mHeroRepository;
     private BaseSchedulerProvider mBaseSchedulerProvider;
     private HeroFragmentAdapter mHeroFragmentAdapter;
     private GridLayoutManager mGridLayoutManager;
+    private Navigator mNavigator;
 
-    public HeroViewModel(HeroRepository heroRepository, HeroFragmentAdapter heroFragmentAdapter) {
+    public HeroViewModel(HeroRepository heroRepository, HeroFragmentAdapter heroFragmentAdapter,
+            Navigator navigator) {
         mHeroRepository = heroRepository;
         mHeroFragmentAdapter = heroFragmentAdapter;
         mGridLayoutManager = new GridLayoutManager(null, 2);
+        mHeroFragmentAdapter.setOnItemButtonClickListener(this);
+        mHeroFragmentAdapter.setOnRecyclerViewItemClickListener(this);
+        mNavigator = navigator;
     }
 
     public GridLayoutManager getGridLayout() {
@@ -62,5 +71,13 @@ public class HeroViewModel extends BaseViewModel {
                     }
                 });
         startDisposable(disposable);
+    }
+
+    @Override
+    public void onItemRecyclerViewClick(Hero item) {
+    }
+
+    @Override
+    public void onItemButtonClick(Hero item) {
     }
 }

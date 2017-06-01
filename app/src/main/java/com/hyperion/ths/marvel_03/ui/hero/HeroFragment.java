@@ -12,6 +12,7 @@ import com.hyperion.ths.marvel_03.data.source.remote.HeroRepository;
 import com.hyperion.ths.marvel_03.data.source.remote.api.HeroRemoteDataSource;
 import com.hyperion.ths.marvel_03.data.source.remote.api.service.MarvelServiceClient;
 import com.hyperion.ths.marvel_03.databinding.FragmentHeroBinding;
+import com.hyperion.ths.marvel_03.utils.navigator.Navigator;
 import com.hyperion.ths.marvel_03.utils.rx.SchedulerProvider;
 import java.io.UnsupportedEncodingException;
 
@@ -20,10 +21,10 @@ import java.io.UnsupportedEncodingException;
  */
 public class HeroFragment extends Fragment {
 
+    private HeroViewModel mHeroViewModel;
+
     public HeroFragment() {
     }
-
-    private HeroViewModel mHeroViewModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -33,7 +34,8 @@ public class HeroFragment extends Fragment {
         HeroRepository heroRepository =
                 new HeroRepository(new HeroRemoteDataSource(MarvelServiceClient.getInstance()));
         HeroFragmentAdapter heroFragmentAdapter = new HeroFragmentAdapter(getActivity());
-        mHeroViewModel = new HeroViewModel(heroRepository, heroFragmentAdapter);
+        Navigator navigator = new Navigator(getActivity());
+        mHeroViewModel = new HeroViewModel(heroRepository, heroFragmentAdapter, navigator);
         mHeroViewModel.setBaseSchedulerProvider(SchedulerProvider.getInstance());
         View view = fragmentHeroBinding.getRoot();
         fragmentHeroBinding.setViewModel(mHeroViewModel);
