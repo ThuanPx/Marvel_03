@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.hyperion.ths.marvel_03.ui.heroinfo.HeroInfoActivity"
+    tools:ignore="ContentDescription"
+    >
+    <data>
+        <variable
+            name="viewModel"
+            type="com.hyperion.ths.marvel_03.ui.heroinfo.HeroInfoViewModel"
+            />
+    </data>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+
+        >
+        <ImageView
+            android:layout_width="@dimen/dp_200"
+            android:layout_height="@dimen/dp_200"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/dp_30"
+            android:layout_marginTop="@dimen/dp_30"
+            app:imageUrl="@{viewModel.heroImageUrl}"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{viewModel.heroId}"
+            android:textSize="@dimen/sp_17"
+            android:textStyle="bold"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{viewModel.heroName}"
+            android:textSize="@dimen/sp_17"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{viewModel.heroDes}"
+            android:textSize="@dimen/sp_17"
+            />
+    </LinearLayout>
+</layout>

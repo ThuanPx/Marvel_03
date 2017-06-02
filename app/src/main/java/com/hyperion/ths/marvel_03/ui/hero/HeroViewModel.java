@@ -1,11 +1,13 @@
 package com.hyperion.ths.marvel_03.ui.hero;
 
+import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.util.Log;
 import com.hyperion.ths.marvel_03.data.model.Hero;
 import com.hyperion.ths.marvel_03.data.source.remote.HeroRepository;
 import com.hyperion.ths.marvel_03.ui.BaseRecyclerView;
 import com.hyperion.ths.marvel_03.ui.BaseViewModel;
+import com.hyperion.ths.marvel_03.ui.heroinfo.HeroInfoActivity;
 import com.hyperion.ths.marvel_03.utils.Constant;
 import com.hyperion.ths.marvel_03.utils.navigator.Navigator;
 import com.hyperion.ths.marvel_03.utils.rx.BaseSchedulerProvider;
@@ -75,6 +77,9 @@ public class HeroViewModel extends BaseViewModel
 
     @Override
     public void onItemRecyclerViewClick(Hero item) {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(Constant.BUNDLE_HERO, item);
+        mNavigator.startActivity(HeroInfoActivity.class, bundle);
     }
 
     @Override

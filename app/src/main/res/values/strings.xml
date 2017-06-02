@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Marvel_03</string>
+    <string name="hero_info_activity">Hero Information</string>
+    <string name="id">ID : </string>
+    <string name="name">Name : </string>
+    <string name="description">Description : </string>
 </resources>
-
