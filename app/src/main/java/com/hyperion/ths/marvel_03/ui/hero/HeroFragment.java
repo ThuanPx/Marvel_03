@@ -8,7 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.hyperion.ths.marvel_03.R;
-import com.hyperion.ths.marvel_03.data.source.remote.HeroRepository;
+import com.hyperion.ths.marvel_03.data.source.local.sqlite.HeroLocalDataSource;
+import com.hyperion.ths.marvel_03.data.source.HeroRepository;
 import com.hyperion.ths.marvel_03.data.source.remote.api.HeroRemoteDataSource;
 import com.hyperion.ths.marvel_03.data.source.remote.api.service.MarvelServiceClient;
 import com.hyperion.ths.marvel_03.databinding.FragmentHeroBinding;
@@ -31,8 +32,10 @@ public class HeroFragment extends Fragment {
             Bundle savedInstanceState) {
         FragmentHeroBinding fragmentHeroBinding =
                 DataBindingUtil.inflate(inflater, R.layout.fragment_hero, container, false);
+        HeroLocalDataSource heroLocalDataSource = new HeroLocalDataSource(getActivity());
         HeroRepository heroRepository =
-                new HeroRepository(new HeroRemoteDataSource(MarvelServiceClient.getInstance()));
+                new HeroRepository(new HeroRemoteDataSource(MarvelServiceClient.getInstance()),
+                        heroLocalDataSource);
         HeroFragmentAdapter heroFragmentAdapter = new HeroFragmentAdapter(getActivity());
         Navigator navigator = new Navigator(getActivity());
         mHeroViewModel = new HeroViewModel(heroRepository, heroFragmentAdapter, navigator);

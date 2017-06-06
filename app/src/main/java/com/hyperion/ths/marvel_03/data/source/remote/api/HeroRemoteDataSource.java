@@ -2,7 +2,7 @@ package com.hyperion.ths.marvel_03.data.source.remote.api;
 
 import com.hyperion.ths.marvel_03.data.model.CharactersList;
 import com.hyperion.ths.marvel_03.data.model.Hero;
-import com.hyperion.ths.marvel_03.data.source.remote.HeroDataSource;
+import com.hyperion.ths.marvel_03.data.source.HeroDataSource;
 import com.hyperion.ths.marvel_03.data.source.remote.api.service.MarvelApi;
 import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;

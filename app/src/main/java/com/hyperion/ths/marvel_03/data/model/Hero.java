@@ -1,8 +1,10 @@
 package com.hyperion.ths.marvel_03.data.model;
 
+import android.content.ContentValues;
 import android.os.Parcel;
 import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
+import com.hyperion.ths.marvel_03.data.source.local.sqlite.DatabaseHelper;
 
 /**
  * Created by ths on 28/05/2017.
@@ -80,5 +82,25 @@ public class Hero implements Parcelable {
         parcel.writeString(mName);
         parcel.writeString(mDescription);
         parcel.writeParcelable(mImageHero, flags);
+    }
+
+    public Hero() {
+    }
+
+    public ContentValues getContentValues() {
+        ContentValues contentValues = new ContentValues();
+        if (mId != 0) {
+            contentValues.put(DatabaseHelper.ContactEntry.COLUMN_ID, mId);
+        }
+        if (mName != null) {
+            contentValues.put(DatabaseHelper.ContactEntry.COLUMN_NAME, mName);
+        }
+        if (mDescription != null) {
+            contentValues.put(DatabaseHelper.ContactEntry.COLUMN_DES, mDescription);
+        }
+        if (mImageHero != null) {
+            contentValues.put(DatabaseHelper.ContactEntry.COLUMN_IMAGE, mImageHero.getImageUrl());
+        }
+        return contentValues;
     }
 }

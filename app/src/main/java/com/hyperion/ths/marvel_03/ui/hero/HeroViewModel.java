@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.util.Log;
 import com.hyperion.ths.marvel_03.data.model.Hero;
-import com.hyperion.ths.marvel_03.data.source.remote.HeroRepository;
+import com.hyperion.ths.marvel_03.data.source.HeroRepository;
 import com.hyperion.ths.marvel_03.ui.BaseRecyclerView;
 import com.hyperion.ths.marvel_03.ui.BaseViewModel;
 import com.hyperion.ths.marvel_03.ui.heroinfo.HeroInfoActivity;
@@ -84,5 +84,14 @@ public class HeroViewModel extends BaseViewModel
 
     @Override
     public void onItemButtonClick(Hero item) {
+        if (mHeroRepository.getHeroByName(item.getName()).isEmpty()) {
+            if (!mHeroRepository.insertHero(item)) {
+                Log.e("Error", " Insert hero error!");
+            }
+        } else {
+            if (!mHeroRepository.deleteHero(item)) {
+                Log.e("Error", " Delete hero error!");
+            }
+        }
     }
 }
