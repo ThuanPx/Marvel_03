@@ -22,6 +22,7 @@ public final class Constant {
     public static final long TIMESTAMP = 131710;
     public static final int CONNECTION_TIMEOUT = 60;
     public static final String BUNDLE_HERO = "BUNDLE_HERO";
+    public static final int POINT = 0;
 
     public static String getHashKey() throws UnsupportedEncodingException {
         String hashKey = getMD5EncryptedString(TIMESTAMP + PRIVATE_KEY + PUBLIC_KEY);
