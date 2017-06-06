@@ -9,6 +9,7 @@ import com.hyperion.ths.marvel_03.R;
 import com.hyperion.ths.marvel_03.data.model.Hero;
 import com.hyperion.ths.marvel_03.databinding.ItemFragmentHeroBinding;
 import com.hyperion.ths.marvel_03.ui.BaseRecyclerView;
+import com.hyperion.ths.marvel_03.ui.OnItemClickListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +20,7 @@ import java.util.List;
 public class HeroFragmentAdapter extends RecyclerView.Adapter<HeroFragmentAdapter.ItemViewHolder> {
     private List<Hero> mHeroList;
     private BaseRecyclerView.OnRecyclerViewItemClickListener<Hero> mOnRecyclerViewItemClickListener;
-    private BaseRecyclerView.OnItemButtonClickListener<Hero> mOnItemButtonClickListener;
+    private OnItemClickListener mOnItemButtonClickListener;
 
     public HeroFragmentAdapter(Context context) {
         mHeroList = new ArrayList<>();
@@ -31,8 +32,7 @@ public class HeroFragmentAdapter extends RecyclerView.Adapter<HeroFragmentAdapte
         mOnRecyclerViewItemClickListener = onRecyclerViewItemClickListener;
     }
 
-    public void setOnItemButtonClickListener(
-            BaseRecyclerView.OnItemButtonClickListener<Hero> onItemButtonClickListener) {
+    public void setOnItemButtonClickListener(OnItemClickListener onItemButtonClickListener) {
         mOnItemButtonClickListener = onItemButtonClickListener;
     }
 
@@ -67,12 +67,12 @@ public class HeroFragmentAdapter extends RecyclerView.Adapter<HeroFragmentAdapte
         private ItemFragmentHeroBinding mItemFragmentHeroBinding;
         private BaseRecyclerView.OnRecyclerViewItemClickListener<Hero>
                 mOnRecyclerViewItemClickListener;
-        private BaseRecyclerView.OnItemButtonClickListener<Hero> mOnItemButtonClickListener;
+        private OnItemClickListener mOnItemButtonClickListener;
 
         ItemViewHolder(ItemFragmentHeroBinding binding,
                 BaseRecyclerView.OnRecyclerViewItemClickListener<Hero>
                         onRecyclerViewItemClickListener,
-                BaseRecyclerView.OnItemButtonClickListener<Hero> onItemButtonClickListener) {
+                OnItemClickListener onItemButtonClickListener) {
             super(binding.getRoot());
             mItemFragmentHeroBinding = binding;
             mOnRecyclerViewItemClickListener = onRecyclerViewItemClickListener;

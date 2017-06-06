@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView;
 
 /**
  * Base Recycler view
- * @param <V>
  */
 public abstract class BaseRecyclerView<V extends RecyclerView.ViewHolder>
         extends RecyclerView.Adapter<V> {
@@ -21,17 +20,8 @@ public abstract class BaseRecyclerView<V extends RecyclerView.ViewHolder>
 
     /**
      * Listener click image
-     * @param <T>
      */
     public interface OnRecyclerViewItemClickListener<T> {
         void onItemRecyclerViewClick(T item);
-    }
-
-    /**
-     * Listener click button favorite
-     * @param <T>
-     */
-    public interface OnItemButtonClickListener<T> {
-        void onItemButtonClick(T item);
     }
 }

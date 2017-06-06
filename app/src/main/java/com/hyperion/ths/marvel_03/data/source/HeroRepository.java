@@ -22,19 +22,19 @@ public class HeroRepository {
         return mRemoteDataSource.getAllCharacters(ts, keyApi, hash);
     }
 
-    public boolean insertHero(Hero hero) {
+    public Observable<Void> insertHero(Hero hero) {
         return mLocalDataSource.insertHero(hero);
     }
 
-    public List<Hero> getAllHero() {
+    public Observable<List<Hero>> getAllHero() {
         return mLocalDataSource.getAllHero();
     }
 
-    public List<Hero> getHeroByName(String name) {
+    public Observable<Hero> getHeroByName(String name) {
         return mLocalDataSource.getHeroByName(name);
     }
 
-    public boolean deleteHero(Hero hero) {
+    public Observable<Void> deleteHero(Hero hero) {
         return mLocalDataSource.deleteHero(hero);
     }
 }

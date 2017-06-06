@@ -15,13 +15,13 @@ public interface HeroDataSource {
      */
     interface LocalDataSource {
 
-        boolean insertHero(@NonNull Hero hero);
+        Observable<Void> insertHero(@NonNull Hero hero);
 
-        List<Hero> getAllHero();
+        Observable<List<Hero>> getAllHero();
 
-        List<Hero> getHeroByName(@NonNull String name);
+        Observable<Hero> getHeroByName(@NonNull String name);
 
-        boolean deleteHero(@NonNull Hero hero);
+        Observable<Void> deleteHero(@NonNull Hero hero);
     }
 
     /**
