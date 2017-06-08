@@ -45,6 +45,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/image_hero"
                     android:background="@color/colorAccent"
+                    android:maxLines="1"
                     android:paddingLeft="@dimen/dp_10"
                     android:paddingRight="@dimen/dp_10"
                     android:paddingTop="@dimen/dp_10"
@@ -67,6 +68,7 @@
                     app:allow_random_color="true"
                     app:btn_color="@android:color/darker_gray"
                     app:btn_fill_color="@color/colorPrimary"
+                    app:buttonFavorite="@{viewModel.favorite}"
                     app:siShape="@raw/heart"
                     />
             </RelativeLayout>

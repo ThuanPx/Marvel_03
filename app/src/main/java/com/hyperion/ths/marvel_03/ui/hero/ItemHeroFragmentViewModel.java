@@ -15,13 +15,23 @@ public class ItemHeroFragmentViewModel extends BaseObservable {
     private Hero mHero;
     private BaseRecyclerView.OnRecyclerViewItemClickListener<Hero> mOnRecyclerViewItemClickListener;
     private OnItemClickListener mOnItemButtonClickListener;
+    private boolean mFavorite;
 
     public ItemHeroFragmentViewModel(Hero hero,
             BaseRecyclerView.OnRecyclerViewItemClickListener<Hero> onRecyclerViewItemClickListener,
-            OnItemClickListener onItemButtonClickListener) {
+            OnItemClickListener onItemButtonClickListener, boolean favorite) {
         mHero = hero;
         mOnRecyclerViewItemClickListener = onRecyclerViewItemClickListener;
         mOnItemButtonClickListener = onItemButtonClickListener;
+        mFavorite = favorite;
+    }
+
+    public boolean isFavorite() {
+        return mFavorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        mFavorite = favorite;
     }
 
     public void onItemCardClicked(View view) {

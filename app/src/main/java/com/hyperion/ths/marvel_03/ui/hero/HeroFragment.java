@@ -23,6 +23,7 @@ import java.io.UnsupportedEncodingException;
 public class HeroFragment extends Fragment {
 
     private HeroViewModel mHeroViewModel;
+    private static final String TAG = HeroFragment.class.getSimpleName();
 
     public HeroFragment() {
     }
@@ -36,7 +37,8 @@ public class HeroFragment extends Fragment {
         HeroRepository heroRepository =
                 new HeroRepository(new HeroRemoteDataSource(MarvelServiceClient.getInstance()),
                         heroLocalDataSource);
-        HeroFragmentAdapter heroFragmentAdapter = new HeroFragmentAdapter(getActivity());
+        HeroFragmentAdapter heroFragmentAdapter =
+                new HeroFragmentAdapter(getActivity(), heroRepository);
         Navigator navigator = new Navigator(getActivity());
         mHeroViewModel = new HeroViewModel(heroRepository, heroFragmentAdapter, navigator);
         mHeroViewModel.setBaseSchedulerProvider(SchedulerProvider.getInstance());
@@ -44,6 +46,14 @@ public class HeroFragment extends Fragment {
         fragmentHeroBinding.setViewModel(mHeroViewModel);
 
         return view;
+    }
+
+    @Override
+    public void setMenuVisibility(boolean menuVisible) {
+        super.setMenuVisibility(menuVisible);
+        if (menuVisible && mHeroViewModel != null) {
+            mHeroViewModel.reLoadList();
+        }
     }
 
     @Override
@@ -58,7 +68,7 @@ public class HeroFragment extends Fragment {
         try {
             mHeroViewModel.getAllHeroes();
         } catch (UnsupportedEncodingException e) {
-            Log.e("Error ", e.getLocalizedMessage());
+            Log.e(TAG, e.getLocalizedMessage());
         }
     }
 }

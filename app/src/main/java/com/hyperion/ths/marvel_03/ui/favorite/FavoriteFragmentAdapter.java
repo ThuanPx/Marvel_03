@@ -54,9 +54,10 @@ public class FavoriteFragmentAdapter
                 mFavoriteClickListener);
     }
 
+    //Because adapter for Fragment Favorite so icon favorite always checked so set "true"
     @Override
     public void onBindViewHolder(ItemViewHolder holder, int position) {
-        holder.bindData(mHeroList.get(position), false);
+        holder.bindData(mHeroList.get(position), true);
     }
 
     @Override

@@ -13,8 +13,10 @@ import com.hyperion.ths.marvel_03.utils.navigator.Navigator;
 import com.hyperion.ths.marvel_03.utils.rx.BaseSchedulerProvider;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.observers.DisposableObserver;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,11 +24,13 @@ import java.util.List;
  */
 
 public class HeroViewModel extends BaseViewModel implements OnItemClickListener {
+    private static final String TAG = HeroViewModel.class.getSimpleName();
     private HeroRepository mHeroRepository;
     private BaseSchedulerProvider mBaseSchedulerProvider;
     private HeroFragmentAdapter mHeroFragmentAdapter;
     private GridLayoutManager mGridLayoutManager;
     private Navigator mNavigator;
+    private List<Hero> mHeroList;
 
     public HeroViewModel(HeroRepository heroRepository, HeroFragmentAdapter heroFragmentAdapter,
             Navigator navigator) {
@@ -36,6 +40,7 @@ public class HeroViewModel extends BaseViewModel implements OnItemClickListener 
         mHeroFragmentAdapter.setOnItemButtonClickListener(this);
         mHeroFragmentAdapter.setOnRecyclerViewItemClickListener(this);
         mNavigator = navigator;
+        mHeroList = new ArrayList<>();
     }
 
     public GridLayoutManager getGridLayout() {
@@ -58,12 +63,14 @@ public class HeroViewModel extends BaseViewModel implements OnItemClickListener 
                 .subscribeWith(new DisposableObserver<List<Hero>>() {
                     @Override
                     public void onNext(@NonNull List<Hero> heroesList) {
-                        mHeroFragmentAdapter.updateData(heroesList);
+                        mHeroList.clear();
+                        mHeroList.addAll(heroesList);
+                        mHeroFragmentAdapter.updateData(mHeroList);
                     }
 
                     @Override
-                    public void onError(@NonNull Throwable e) {
-                        Log.e("onError", e.getLocalizedMessage());
+                    public void onError(@NonNull Throwable throwable) {
+                        Log.e(TAG, throwable.getLocalizedMessage());
                     }
 
                     @Override
@@ -71,6 +78,10 @@ public class HeroViewModel extends BaseViewModel implements OnItemClickListener 
                     }
                 });
         startDisposable(disposable);
+    }
+
+    public void reLoadList() {
+        mHeroFragmentAdapter.updateData(mHeroList);
     }
 
     @Override
@@ -82,60 +93,57 @@ public class HeroViewModel extends BaseViewModel implements OnItemClickListener 
 
     @Override
     public void onItemFavoriteClick(final Hero item) {
-        mHeroRepository.getHeroByName(item.getName()).subscribe(new DisposableObserver<Hero>() {
-            @Override
-            public void onNext(@NonNull Hero hero) {
-                if (hero.getId() == 0) {
-                    insertHero(item);
-                } else {
-                    deleteHero(item);
-                }
-            }
-
-            @Override
-            public void onError(@NonNull Throwable e) {
-                Log.e("Error Get Name Rx", e.getLocalizedMessage());
-            }
-
-            @Override
-            public void onComplete() {
-            }
-        });
+        mHeroRepository.getHeroByName(item.getName())
+                .subscribeOn(mBaseSchedulerProvider.io())
+                .observeOn(mBaseSchedulerProvider.ui())
+                .subscribe(new Consumer<Hero>() {
+                    @Override
+                    public void accept(@NonNull Hero hero) throws Exception {
+                        if (hero.getId() == Constant.POINT) {
+                            insertHero(item);
+                        } else {
+                            deleteHero(item);
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception {
+                        Log.e(TAG, throwable.getLocalizedMessage());
+                    }
+                });
     }
 
     private void deleteHero(Hero hero) {
-        mHeroRepository.deleteHero(hero).subscribe(new DisposableObserver<Void>() {
-            @Override
-            public void onNext(@NonNull Void aVoid) {
-
-            }
-
-            @Override
-            public void onError(@NonNull Throwable e) {
-                Log.e("Error Delete Rx", e.getLocalizedMessage());
-            }
-
-            @Override
-            public void onComplete() {
-            }
-        });
+        mHeroRepository.deleteHero(hero)
+                .subscribeOn(mBaseSchedulerProvider.io())
+                .observeOn(mBaseSchedulerProvider.ui())
+                .subscribe(new Consumer<Void>() {
+                    @Override
+                    public void accept(@NonNull Void aVoid) throws Exception {
+                        //TODO coming soon Toast
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception {
+                        Log.e(TAG, throwable.getLocalizedMessage());
+                    }
+                });
     }
 
     private void insertHero(Hero hero) {
-        mHeroRepository.insertHero(hero).subscribe(new DisposableObserver<Void>() {
-            @Override
-            public void onNext(@NonNull Void aVoid) {
-
-            }
-
-            @Override
-            public void onError(@NonNull Throwable e) {
-                Log.e("Error Insert Rx", e.getLocalizedMessage());
-            }
-
-            @Override
-            public void onComplete() {
-            }
-        });
+        mHeroRepository.insertHero(hero)
+                .subscribeOn(mBaseSchedulerProvider.io())
+                .observeOn(mBaseSchedulerProvider.ui())
+                .subscribe(new Consumer<Void>() {
+                    @Override
+                    public void accept(@NonNull Void aVoid) throws Exception {
+                        //TODO coming soon Toast
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception {
+                        Log.e(TAG, throwable.getLocalizedMessage());
+                    }
+                });
     }
 }
