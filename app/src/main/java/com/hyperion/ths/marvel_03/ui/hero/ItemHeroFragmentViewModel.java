@@ -4,6 +4,7 @@ import android.databinding.BaseObservable;
 import android.view.View;
 import com.hyperion.ths.marvel_03.data.model.Hero;
 import com.hyperion.ths.marvel_03.ui.BaseRecyclerView;
+import com.hyperion.ths.marvel_03.ui.OnItemClickListener;
 import com.hyperion.ths.marvel_03.utils.Constant;
 
 /**
@@ -13,11 +14,11 @@ import com.hyperion.ths.marvel_03.utils.Constant;
 public class ItemHeroFragmentViewModel extends BaseObservable {
     private Hero mHero;
     private BaseRecyclerView.OnRecyclerViewItemClickListener<Hero> mOnRecyclerViewItemClickListener;
-    private BaseRecyclerView.OnItemButtonClickListener<Hero> mOnItemButtonClickListener;
+    private OnItemClickListener mOnItemButtonClickListener;
 
     public ItemHeroFragmentViewModel(Hero hero,
             BaseRecyclerView.OnRecyclerViewItemClickListener<Hero> onRecyclerViewItemClickListener,
-            BaseRecyclerView.OnItemButtonClickListener<Hero> onItemButtonClickListener) {
+            OnItemClickListener onItemButtonClickListener) {
         mHero = hero;
         mOnRecyclerViewItemClickListener = onRecyclerViewItemClickListener;
         mOnItemButtonClickListener = onItemButtonClickListener;
@@ -34,7 +35,7 @@ public class ItemHeroFragmentViewModel extends BaseObservable {
         if (mOnItemButtonClickListener == null) {
             return;
         }
-        mOnItemButtonClickListener.onItemButtonClick(mHero);
+        mOnItemButtonClickListener.onItemFavoriteClick(mHero);
     }
 
     public String getHeroName() {

@@ -5,8 +5,8 @@ import android.support.v7.widget.GridLayoutManager;
 import android.util.Log;
 import com.hyperion.ths.marvel_03.data.model.Hero;
 import com.hyperion.ths.marvel_03.data.source.HeroRepository;
-import com.hyperion.ths.marvel_03.ui.BaseRecyclerView;
 import com.hyperion.ths.marvel_03.ui.BaseViewModel;
+import com.hyperion.ths.marvel_03.ui.OnItemClickListener;
 import com.hyperion.ths.marvel_03.ui.heroinfo.HeroInfoActivity;
 import com.hyperion.ths.marvel_03.utils.Constant;
 import com.hyperion.ths.marvel_03.utils.navigator.Navigator;
@@ -21,9 +21,7 @@ import java.util.List;
  * Created by ths on 31/05/2017.
  */
 
-public class HeroViewModel extends BaseViewModel
-        implements BaseRecyclerView.OnRecyclerViewItemClickListener<Hero>,
-        BaseRecyclerView.OnItemButtonClickListener<Hero> {
+public class HeroViewModel extends BaseViewModel implements OnItemClickListener {
     private HeroRepository mHeroRepository;
     private BaseSchedulerProvider mBaseSchedulerProvider;
     private HeroFragmentAdapter mHeroFragmentAdapter;
@@ -83,15 +81,61 @@ public class HeroViewModel extends BaseViewModel
     }
 
     @Override
-    public void onItemButtonClick(Hero item) {
-        if (mHeroRepository.getHeroByName(item.getName()).isEmpty()) {
-            if (!mHeroRepository.insertHero(item)) {
-                Log.e("Error", " Insert hero error!");
+    public void onItemFavoriteClick(final Hero item) {
+        mHeroRepository.getHeroByName(item.getName()).subscribe(new DisposableObserver<Hero>() {
+            @Override
+            public void onNext(@NonNull Hero hero) {
+                if (hero.getId() == 0) {
+                    insertHero(item);
+                } else {
+                    deleteHero(item);
+                }
             }
-        } else {
-            if (!mHeroRepository.deleteHero(item)) {
-                Log.e("Error", " Delete hero error!");
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+                Log.e("Error Get Name Rx", e.getLocalizedMessage());
             }
-        }
+
+            @Override
+            public void onComplete() {
+            }
+        });
+    }
+
+    private void deleteHero(Hero hero) {
+        mHeroRepository.deleteHero(hero).subscribe(new DisposableObserver<Void>() {
+            @Override
+            public void onNext(@NonNull Void aVoid) {
+
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+                Log.e("Error Delete Rx", e.getLocalizedMessage());
+            }
+
+            @Override
+            public void onComplete() {
+            }
+        });
+    }
+
+    private void insertHero(Hero hero) {
+        mHeroRepository.insertHero(hero).subscribe(new DisposableObserver<Void>() {
+            @Override
+            public void onNext(@NonNull Void aVoid) {
+
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+                Log.e("Error Insert Rx", e.getLocalizedMessage());
+            }
+
+            @Override
+            public void onComplete() {
+            }
+        });
     }
 }

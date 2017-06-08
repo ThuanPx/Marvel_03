@@ -15,8 +15,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String SQL_CREATE_CONTACTS = "CREATE TABLE "
             + DatabaseHelper.ContactEntry.TABLE_NAME
             + "("
+            + DatabaseHelper.ContactEntry.COLUMN_AUTOID
+            + " INTEGER PRIMARY KEY AUTOINCREMENT , "
             + DatabaseHelper.ContactEntry.COLUMN_ID
-            + " INTEGER PRIMARY KEY NOT NULL ,"
+            + " INTEGER ,"
             + DatabaseHelper.ContactEntry.COLUMN_NAME
             + " TEXT ,"
             + DatabaseHelper.ContactEntry.COLUMN_DES
@@ -46,6 +48,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     public static class ContactEntry implements BaseColumns {
         public static final String TABLE_NAME = "tbl_hero";
+        public static final String COLUMN_AUTOID = "autoid";
         public static final String COLUMN_ID = "id";
         public static final String COLUMN_NAME = "name";
         public static final String COLUMN_DES = "description";

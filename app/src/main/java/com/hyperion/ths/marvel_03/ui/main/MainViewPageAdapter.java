@@ -1,5 +1,6 @@
 package com.hyperion.ths.marvel_03.ui.main;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -17,9 +18,10 @@ import com.hyperion.ths.marvel_03.ui.hero.HeroFragment;
  */
 
 public class MainViewPageAdapter extends FragmentStatePagerAdapter {
-    private Context mContext;
-    private String[] mTabsTitle = { "Hero", "Favorite" };
-    private int[] mTabsIcons = { R.drawable.ic_hero_selector, R.drawable.ic_favorite_selector };
+    private final Context mContext;
+    private final String[] mTabsTitle = { "Hero", "Favorite" };
+    private final int[] mTabsIcons =
+            { R.drawable.ic_hero_selector, R.drawable.ic_favorite_selector };
 
     public MainViewPageAdapter(FragmentManager fm, Context context) {
         super(fm);
@@ -27,7 +29,8 @@ public class MainViewPageAdapter extends FragmentStatePagerAdapter {
     }
 
     public View getTabView(int position) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.custom_tablayout, null);
+        @SuppressLint("InflateParams") View view =
+                LayoutInflater.from(mContext).inflate(R.layout.custom_tablayout, null);
         TextView textTitle = (TextView) view.findViewById(R.id.title);
         textTitle.setText(mTabsTitle[position]);
         ImageView imageViewIcon = (ImageView) view.findViewById(R.id.icon);
