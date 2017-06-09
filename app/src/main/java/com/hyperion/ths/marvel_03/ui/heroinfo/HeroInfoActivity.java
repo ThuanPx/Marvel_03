@@ -14,15 +14,21 @@ import com.hyperion.ths.marvel_03.utils.navigator.Navigator;
  */
 public class HeroInfoActivity extends AppCompatActivity {
     private HeroInfoViewModel mHeroInfoViewModel;
+    private Navigator mNavigator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActivityHeroInfoBinding activityHeroInfoBinding =
                 DataBindingUtil.setContentView(this, R.layout.activity_hero_info);
-        Navigator navigator = new Navigator(this);
+        mNavigator = new Navigator(this);
         Hero hero = getIntent().getParcelableExtra(Constant.BUNDLE_HERO);
-        mHeroInfoViewModel = new HeroInfoViewModel(hero, navigator);
+        mHeroInfoViewModel = new HeroInfoViewModel(hero, mNavigator);
         activityHeroInfoBinding.setViewModel(mHeroInfoViewModel);
+    }
+
+    @Override
+    public void onBackPressed() {
+        mNavigator.finishActivity();
     }
 }
