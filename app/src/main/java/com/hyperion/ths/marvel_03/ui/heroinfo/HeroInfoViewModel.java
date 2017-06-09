@@ -13,10 +13,17 @@ import com.hyperion.ths.marvel_03.utils.navigator.Navigator;
 public class HeroInfoViewModel extends BaseViewModel {
     private Hero mHero;
     private Navigator mNavigator;
+    private HeroInfoViewPageAdapter mHeroInfoViewPageAdapter;
 
-    public HeroInfoViewModel(Hero hero, Navigator navigator) {
+    public HeroInfoViewModel(Hero hero, Navigator navigator,
+            HeroInfoViewPageAdapter heroInfoViewPageAdapter) {
         mHero = hero;
         mNavigator = navigator;
+        mHeroInfoViewPageAdapter = heroInfoViewPageAdapter;
+    }
+
+    public HeroInfoViewPageAdapter getHeroInfoViewPageAdapter() {
+        return mHeroInfoViewPageAdapter;
     }
 
     public String getHeroName() {
@@ -28,8 +35,7 @@ public class HeroInfoViewModel extends BaseViewModel {
     }
 
     public String getHeroDes() {
-        return mNavigator.getActivity().getString(R.string.description)
-                + mHero.getDescription();
+        return mNavigator.getActivity().getString(R.string.description) + mHero.getDescription();
     }
 
     public String getHeroImageUrl() {

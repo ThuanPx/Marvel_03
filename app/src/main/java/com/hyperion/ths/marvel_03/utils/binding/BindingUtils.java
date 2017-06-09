@@ -6,6 +6,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.ImageView;
+import com.hyperion.ths.marvel_03.ui.heroinfo.HeroInfoViewPageAdapter;
 import com.hyperion.ths.marvel_03.ui.main.MainViewPageAdapter;
 import com.sackcentury.shinebuttonlib.ShineButton;
 import com.squareup.picasso.Picasso;
@@ -16,6 +17,18 @@ import com.squareup.picasso.Picasso;
 
 public final class BindingUtils {
     private BindingUtils() {
+    }
+
+    @BindingAdapter("upWithViewPageHeroInfo")
+    public static void setUpWithViewPageHeroInfo(final TabLayout tabLayout,
+            final ViewPager viewPager) {
+        tabLayout.setupWithViewPager(viewPager);
+    }
+
+    @BindingAdapter("adapterViewPageHeroInfo")
+    public static void setAdapterViewPageHeroInfo(final ViewPager viewPage,
+            final HeroInfoViewPageAdapter heroInfoViewPageAdapter) {
+        viewPage.setAdapter(heroInfoViewPageAdapter);
     }
 
     @BindingAdapter("buttonFavorite")
