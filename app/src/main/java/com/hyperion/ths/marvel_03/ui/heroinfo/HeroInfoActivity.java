@@ -23,7 +23,9 @@ public class HeroInfoActivity extends AppCompatActivity {
                 DataBindingUtil.setContentView(this, R.layout.activity_hero_info);
         mNavigator = new Navigator(this);
         Hero hero = getIntent().getParcelableExtra(Constant.BUNDLE_HERO);
-        mHeroInfoViewModel = new HeroInfoViewModel(hero, mNavigator);
+        HeroInfoViewPageAdapter heroInfoViewPageAdapter =
+                new HeroInfoViewPageAdapter(this, hero.getImageHero().getImageUrl());
+        mHeroInfoViewModel = new HeroInfoViewModel(hero, mNavigator, heroInfoViewPageAdapter);
         activityHeroInfoBinding.setViewModel(mHeroInfoViewModel);
     }
 
