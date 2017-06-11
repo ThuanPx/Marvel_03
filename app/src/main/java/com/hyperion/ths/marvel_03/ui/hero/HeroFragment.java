@@ -15,6 +15,8 @@ import com.hyperion.ths.marvel_03.data.source.remote.api.service.MarvelServiceCl
 import com.hyperion.ths.marvel_03.databinding.FragmentHeroBinding;
 import com.hyperion.ths.marvel_03.utils.navigator.Navigator;
 import com.hyperion.ths.marvel_03.utils.rx.SchedulerProvider;
+import com.hyperion.ths.marvel_03.widget.dialog.DialogManager;
+import com.hyperion.ths.marvel_03.widget.dialog.DialogManagerImpl;
 import java.io.UnsupportedEncodingException;
 
 /**
@@ -40,7 +42,9 @@ public class HeroFragment extends Fragment {
         HeroFragmentAdapter heroFragmentAdapter =
                 new HeroFragmentAdapter(getActivity(), heroRepository);
         Navigator navigator = new Navigator(getActivity());
-        mHeroViewModel = new HeroViewModel(heroRepository, heroFragmentAdapter, navigator);
+        DialogManager dialogManager = new DialogManagerImpl(getContext());
+        mHeroViewModel =
+                new HeroViewModel(heroRepository, heroFragmentAdapter, navigator, dialogManager);
         mHeroViewModel.setBaseSchedulerProvider(SchedulerProvider.getInstance());
         View view = fragmentHeroBinding.getRoot();
         fragmentHeroBinding.setViewModel(mHeroViewModel);
