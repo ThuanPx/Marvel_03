@@ -11,6 +11,7 @@ import java.security.NoSuchAlgorithmException;
  */
 
 public final class Constant {
+
     private Constant() {
 
     }
