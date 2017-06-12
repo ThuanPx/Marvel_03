@@ -12,6 +12,8 @@ public interface DialogManager {
 
     void showDialogError(String error);
 
+    void setOnClickDialogListener(ClickDialogListener clickDialogListener);
+
     /**
      * Click dialog listener
      */
