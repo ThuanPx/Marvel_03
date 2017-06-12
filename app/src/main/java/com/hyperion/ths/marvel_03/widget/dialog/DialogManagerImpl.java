@@ -19,10 +19,6 @@ public class DialogManagerImpl implements DialogManager {
         mContext = context;
     }
 
-    public void setOnClickDialogListener(ClickDialogListener clickDialogListener) {
-        mClickDialogListener = clickDialogListener;
-    }
-
     @Override
     public void showProgressDialog() {
         if (mProgressDialog == null) {
@@ -56,6 +52,11 @@ public class DialogManagerImpl implements DialogManager {
 
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    @Override
+    public void setOnClickDialogListener(ClickDialogListener clickDialogListener) {
+        mClickDialogListener = clickDialogListener;
     }
 
     @Override

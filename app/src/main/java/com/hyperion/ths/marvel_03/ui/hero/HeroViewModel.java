@@ -1,8 +1,10 @@
 package com.hyperion.ths.marvel_03.ui.hero;
 
+import android.databinding.Bindable;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.util.Log;
+import com.hyperion.ths.marvel_03.BR;
 import com.hyperion.ths.marvel_03.R;
 import com.hyperion.ths.marvel_03.data.model.Hero;
 import com.hyperion.ths.marvel_03.data.source.HeroRepository;
@@ -13,7 +15,6 @@ import com.hyperion.ths.marvel_03.utils.Constant;
 import com.hyperion.ths.marvel_03.utils.navigator.Navigator;
 import com.hyperion.ths.marvel_03.utils.rx.BaseSchedulerProvider;
 import com.hyperion.ths.marvel_03.widget.dialog.DialogManager;
-import com.hyperion.ths.marvel_03.widget.dialog.DialogManagerImpl;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
@@ -35,9 +36,9 @@ public class HeroViewModel extends BaseViewModel
     private Navigator mNavigator;
     private List<Hero> mHeroList;
     private DialogManager mDialogManager;
-    private DialogManagerImpl mDialogManagerImpl;
     //Method getAllHeroes() is only running one
     private Boolean mIsStart;
+    private boolean mRefreshing;
 
     public HeroViewModel(HeroRepository heroRepository, HeroFragmentAdapter heroFragmentAdapter,
             Navigator navigator, DialogManager dialogManager) {
@@ -48,8 +49,7 @@ public class HeroViewModel extends BaseViewModel
         mNavigator = navigator;
         mHeroList = new ArrayList<>();
         mDialogManager = dialogManager;
-        mDialogManagerImpl = new DialogManagerImpl(navigator.getActivity());
-        mDialogManagerImpl.setOnClickDialogListener(HeroViewModel.this);
+        mDialogManager.setOnClickDialogListener(HeroViewModel.this);
         mIsStart = false;
     }
 
@@ -177,9 +177,56 @@ public class HeroViewModel extends BaseViewModel
     @Override
     public void onClickDialog() {
         try {
-            getAllHeroes();
+            getAllHeroRefresh();
         } catch (UnsupportedEncodingException e) {
             Log.e(TAG, e.getLocalizedMessage());
         }
+    }
+
+    public void getAllHeroRefresh() throws UnsupportedEncodingException {
+        Disposable disposable = mHeroRepository.getAllHero(Constant.TIMESTAMP, Constant.PUBLIC_KEY,
+                Constant.getHashKey())
+                .subscribeOn(mBaseSchedulerProvider.io())
+                .observeOn(mBaseSchedulerProvider.ui())
+                .subscribeWith(new DisposableObserver<List<Hero>>() {
+                    @Override
+                    public void onNext(@NonNull List<Hero> heroesList) {
+                        mHeroList.clear();
+                        mHeroList.addAll(heroesList);
+                        mHeroFragmentAdapter.updateData(mHeroList);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable throwable) {
+                        setRefreshing(false);
+                        mDialogManager.showDialogError(
+                                mNavigator.getActivity().getString(R.string.message_error_connect));
+                        Log.e(TAG, throwable.getLocalizedMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        setRefreshing(false);
+                    }
+                });
+        startDisposable(disposable);
+    }
+
+    public void onRefresh() {
+        try {
+            getAllHeroRefresh();
+        } catch (UnsupportedEncodingException e) {
+            Log.e(TAG, e.getLocalizedMessage());
+        }
+    }
+
+    @Bindable
+    public boolean isRefreshing() {
+        return mRefreshing;
+    }
+
+    private void setRefreshing(boolean refreshing) {
+        this.mRefreshing = refreshing;
+        notifyPropertyChanged(BR.refreshing);
     }
 }

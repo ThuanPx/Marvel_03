@@ -3,6 +3,7 @@ package com.hyperion.ths.marvel_03.utils.binding;
 import android.databinding.BindingAdapter;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.ImageView;
@@ -16,7 +17,15 @@ import com.squareup.picasso.Picasso;
  */
 
 public final class BindingUtils {
+
     private BindingUtils() {
+    }
+
+    @BindingAdapter({ "onRefresh", "colorRes" })
+    public static void setRefreshLayout(final SwipeRefreshLayout swipeRefreshLayout,
+            SwipeRefreshLayout.OnRefreshListener refreshListener, int colorResIds) {
+        swipeRefreshLayout.setColorSchemeColors(colorResIds);
+        swipeRefreshLayout.setOnRefreshListener(refreshListener);
     }
 
     @BindingAdapter("upWithViewPageHeroInfo")

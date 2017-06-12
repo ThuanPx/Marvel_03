@@ -1,4 +1,6 @@
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools"
+    >
     <data>
         <variable
             name="viewModel"
@@ -9,12 +11,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
-        <android.support.v7.widget.RecyclerView
+        <android.support.v4.widget.SwipeRefreshLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/swiperefresh_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layoutManagerRecycler="@{viewModel.gridLayout}"
-            app:recyclerAdapter="@{viewModel.adapter}"
-            />
+            app:refreshing="@{viewModel.refreshing}"
+            bind:colorRes="@{@color/colorPrimary}"
+            bind:onRefresh="@{viewModel::onRefresh}"
+            >
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layoutManagerRecycler="@{viewModel.gridLayout}"
+                app:recyclerAdapter="@{viewModel.adapter}"
+                />
+        </android.support.v4.widget.SwipeRefreshLayout>
     </FrameLayout>
 
 </layout>
