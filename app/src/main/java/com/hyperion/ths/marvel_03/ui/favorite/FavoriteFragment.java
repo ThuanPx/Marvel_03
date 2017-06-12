@@ -12,6 +12,8 @@ import com.hyperion.ths.marvel_03.data.source.local.sqlite.HeroLocalDataSource;
 import com.hyperion.ths.marvel_03.databinding.FragmentFavoriteBinding;
 import com.hyperion.ths.marvel_03.utils.navigator.Navigator;
 import com.hyperion.ths.marvel_03.utils.rx.SchedulerProvider;
+import com.hyperion.ths.marvel_03.widget.dialog.DialogManager;
+import com.hyperion.ths.marvel_03.widget.dialog.DialogManagerImpl;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -33,8 +35,10 @@ public class FavoriteFragment extends Fragment {
         Navigator navigator = new Navigator(getActivity());
         FavoriteFragmentAdapter favoriteFragmentAdapter =
                 new FavoriteFragmentAdapter(getActivity(), heroRepository);
+        DialogManager dialogManager = new DialogManagerImpl(getContext());
         mFavoriteViewModel =
-                new FavoriteViewModel(favoriteFragmentAdapter, heroRepository, navigator);
+                new FavoriteViewModel(favoriteFragmentAdapter, heroRepository, navigator,
+                        dialogManager);
         mFavoriteViewModel.setBaseSchedulerProvider(SchedulerProvider.getInstance());
         View view = fragmentFavoriteBinding.getRoot();
         fragmentFavoriteBinding.setViewModel(mFavoriteViewModel);

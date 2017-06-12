@@ -11,6 +11,7 @@ import com.hyperion.ths.marvel_03.ui.heroinfo.HeroInfoActivity;
 import com.hyperion.ths.marvel_03.utils.Constant;
 import com.hyperion.ths.marvel_03.utils.navigator.Navigator;
 import com.hyperion.ths.marvel_03.utils.rx.BaseSchedulerProvider;
+import com.hyperion.ths.marvel_03.widget.dialog.DialogManager;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import io.reactivex.observers.DisposableObserver;
@@ -26,14 +27,16 @@ public class FavoriteViewModel extends BaseViewModel implements OnItemClickListe
     private HeroRepository mHeroRepository;
     private Navigator mNavigator;
     private BaseSchedulerProvider mBaseSchedulerProvider;
+    private DialogManager mDialogManager;
 
     public FavoriteViewModel(FavoriteFragmentAdapter favoriteFragmentAdapter,
-            HeroRepository heroRepository, Navigator navigator) {
+            HeroRepository heroRepository, Navigator navigator, DialogManager dialogManager) {
         mFavoriteFragmentAdapter = favoriteFragmentAdapter;
         mFavoriteFragmentAdapter.setFavoriteClickListener(this);
         mFavoriteFragmentAdapter.setItemClickListener(this);
         mHeroRepository = heroRepository;
         mNavigator = navigator;
+        mDialogManager = dialogManager;
     }
 
     public FavoriteFragmentAdapter getAdapter() {
@@ -74,6 +77,7 @@ public class FavoriteViewModel extends BaseViewModel implements OnItemClickListe
 
     @Override
     public void onItemFavoriteClick(final Hero hero) {
+        mDialogManager.showProgressDialog();
         mHeroRepository.deleteHero(hero)
                 .subscribeOn(mBaseSchedulerProvider.io())
                 .observeOn(mBaseSchedulerProvider.ui())
@@ -84,12 +88,14 @@ public class FavoriteViewModel extends BaseViewModel implements OnItemClickListe
                     }
 
                     @Override
-                    public void onError(@NonNull Throwable e) {
-
+                    public void onError(@NonNull Throwable throwable) {
+                        Log.e(TAG, throwable.getLocalizedMessage());
+                        mDialogManager.dismissProgressDialog();
                     }
 
                     @Override
                     public void onComplete() {
+                        mDialogManager.dismissProgressDialog();
                         getAllHero();
                     }
                 });
