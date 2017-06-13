@@ -11,6 +11,7 @@ import com.hyperion.ths.marvel_03.data.source.HeroRepository;
 import com.hyperion.ths.marvel_03.ui.BaseViewModel;
 import com.hyperion.ths.marvel_03.ui.OnItemClickListener;
 import com.hyperion.ths.marvel_03.ui.heroinfo.HeroInfoActivity;
+import com.hyperion.ths.marvel_03.ui.main.MainActivity;
 import com.hyperion.ths.marvel_03.utils.Constant;
 import com.hyperion.ths.marvel_03.utils.navigator.Navigator;
 import com.hyperion.ths.marvel_03.utils.rx.BaseSchedulerProvider;
@@ -28,7 +29,8 @@ import java.util.List;
  */
 
 public class HeroViewModel extends BaseViewModel
-        implements OnItemClickListener, DialogManager.ClickDialogListener {
+        implements OnItemClickListener, DialogManager.ClickDialogListener, OnTextSearchListener {
+
     private static final String TAG = HeroViewModel.class.getSimpleName();
     private HeroRepository mHeroRepository;
     private BaseSchedulerProvider mBaseSchedulerProvider;
@@ -51,6 +53,8 @@ public class HeroViewModel extends BaseViewModel
         mDialogManager = dialogManager;
         mDialogManager.setOnClickDialogListener(HeroViewModel.this);
         mIsStart = false;
+        MainActivity mainActivity = (MainActivity) navigator.getActivity();
+        mainActivity.setOnTextSearchListener(this);
     }
 
     public GridLayoutManager getGridLayout() {
@@ -228,5 +232,10 @@ public class HeroViewModel extends BaseViewModel
     private void setRefreshing(boolean refreshing) {
         this.mRefreshing = refreshing;
         notifyPropertyChanged(BR.refreshing);
+    }
+
+    @Override
+    public void getTextListener(String text) {
+        mHeroFragmentAdapter.getFilter().filter(text);
     }
 }

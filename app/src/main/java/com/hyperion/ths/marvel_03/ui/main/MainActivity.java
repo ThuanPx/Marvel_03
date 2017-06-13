@@ -4,9 +4,13 @@ import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
+import android.view.Menu;
+import android.view.MenuItem;
 import com.hyperion.ths.marvel_03.R;
 import com.hyperion.ths.marvel_03.connection.MainReceiver;
 import com.hyperion.ths.marvel_03.databinding.ActivityMainBinding;
+import com.hyperion.ths.marvel_03.ui.hero.OnTextSearchListener;
 
 import static android.net.ConnectivityManager.CONNECTIVITY_ACTION;
 
@@ -14,9 +18,11 @@ import static android.net.ConnectivityManager.CONNECTIVITY_ACTION;
  * Created by ths on 27/05/2017.
  */
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
     private MainViewModel mMainViewModel;
     private MainReceiver mMainReceiver;
+    private SearchView mSearchView;
+    private OnTextSearchListener mOnTextSearchListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +33,30 @@ public class MainActivity extends AppCompatActivity {
         mMainReceiver = new MainReceiver();
         mMainViewModel = new MainViewModel(mainViewPageAdapter, mMainReceiver);
         binding.setViewModel(mMainViewModel);
+    }
+
+    public void setOnTextSearchListener(OnTextSearchListener onTextSearchListener) {
+        mOnTextSearchListener = onTextSearchListener;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_main, menu);
+        MenuItem menuItem = menu.findItem(R.id.search_view);
+        mSearchView = (SearchView) menuItem.getActionView();
+        mSearchView.setOnQueryTextListener(this);
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        mOnTextSearchListener.getTextListener(newText);
+        return true;
     }
 
     @Override
