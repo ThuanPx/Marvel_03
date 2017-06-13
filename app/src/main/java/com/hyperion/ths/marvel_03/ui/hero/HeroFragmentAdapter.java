@@ -52,9 +52,7 @@ public class HeroFragmentAdapter extends RecyclerView.Adapter<HeroFragmentAdapte
     }
 
     public void updateData(List<Hero> heroList) {
-        if (mIsStore) {
-            return;
-        } else {
+        if (!mIsStore) {
             mHeroListStore.addAll(heroList);
             mIsStore = true;
         }
