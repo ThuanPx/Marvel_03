@@ -18,8 +18,8 @@ public class HeroRepository {
         mLocalDataSource = localDataSource;
     }
 
-    public Observable<List<Hero>> getAllHero(long ts, String keyApi, String hash) {
-        return mRemoteDataSource.getAllCharacters(ts, keyApi, hash);
+    public Observable<List<Hero>> getAllHero(int offset, long ts, String keyApi, String hash) {
+        return mRemoteDataSource.getAllCharacters(offset, ts, keyApi, hash);
     }
 
     public Observable<Void> insertHero(Hero hero) {

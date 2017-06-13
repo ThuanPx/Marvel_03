@@ -10,7 +10,8 @@ import retrofit2.http.Query;
  */
 
 public interface MarvelApi {
-    @GET("/v1/public/characters")
-    Observable<CharactersList> getCharacters(@Query("ts") long timestamp,
-            @Query("apikey") String apiKey, @Query("hash") String hash);
+    @GET("/v1/public/characters?limit=20")
+    Observable<CharactersList> getCharacters(@Query("offset") int offset,
+            @Query("ts") long timestamp, @Query("apikey") String apiKey,
+            @Query("hash") String hash);
 }
