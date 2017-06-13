@@ -39,8 +39,7 @@ public class HeroFragment extends Fragment {
         HeroRepository heroRepository =
                 new HeroRepository(new HeroRemoteDataSource(MarvelServiceClient.getInstance()),
                         heroLocalDataSource);
-        HeroFragmentAdapter heroFragmentAdapter =
-                new HeroFragmentAdapter(getActivity(), heroRepository);
+        HeroFragmentAdapter heroFragmentAdapter = new HeroFragmentAdapter(heroRepository);
         Navigator navigator = new Navigator(getActivity());
         DialogManager dialogManager = new DialogManagerImpl(getContext());
         mHeroViewModel =

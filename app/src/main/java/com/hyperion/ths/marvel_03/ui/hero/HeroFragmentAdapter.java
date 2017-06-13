@@ -1,11 +1,12 @@
 package com.hyperion.ths.marvel_03.ui.hero;
 
-import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import com.hyperion.ths.marvel_03.R;
 import com.hyperion.ths.marvel_03.data.model.Hero;
 import com.hyperion.ths.marvel_03.data.source.HeroRepository;
@@ -17,21 +18,26 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by ths on 01/06/2017.
  */
 
-public class HeroFragmentAdapter extends RecyclerView.Adapter<HeroFragmentAdapter.ItemViewHolder> {
+public class HeroFragmentAdapter extends RecyclerView.Adapter<HeroFragmentAdapter.ItemViewHolder>
+        implements Filterable {
     private static final String TAG = HeroFragmentAdapter.class.getSimpleName();
     private List<Hero> mHeroList;
+    private List<Hero> mHeroListStore;
     private BaseRecyclerView.OnRecyclerViewItemClickListener<Hero> mOnRecyclerViewItemClickListener;
     private OnItemClickListener mOnItemButtonClickListener;
     private HeroRepository mHeroRepository;
     private boolean mFavorite;
+    private boolean mIsStore;
 
-    public HeroFragmentAdapter(Context context, HeroRepository heroRepository) {
+    public HeroFragmentAdapter(HeroRepository heroRepository) {
         mHeroList = new ArrayList<>();
+        mHeroListStore = new ArrayList<>();
         mHeroRepository = heroRepository;
     }
 
@@ -46,6 +52,12 @@ public class HeroFragmentAdapter extends RecyclerView.Adapter<HeroFragmentAdapte
     }
 
     public void updateData(List<Hero> heroList) {
+        if (mIsStore) {
+            return;
+        } else {
+            mHeroListStore.addAll(heroList);
+            mIsStore = true;
+        }
         mHeroList.clear();
         mHeroList.addAll(heroList);
         notifyDataSetChanged();
@@ -86,6 +98,36 @@ public class HeroFragmentAdapter extends RecyclerView.Adapter<HeroFragmentAdapte
     @Override
     public int getItemCount() {
         return mHeroList != null ? mHeroList.size() : 0;
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                String charString = charSequence.toString();
+                if (charString.isEmpty()) {
+                    mHeroList = mHeroListStore;
+                } else {
+                    List<Hero> filteredList = new ArrayList<>();
+                    for (Hero hero : mHeroListStore) {
+                        if (hero.getName().toLowerCase(Locale.getDefault()).contains(charString)) {
+                            filteredList.add(hero);
+                        }
+                    }
+                    mHeroList = filteredList;
+                }
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = mHeroList;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                mHeroList = (List<Hero>) filterResults.values;
+                notifyDataSetChanged();
+            }
+        };
     }
 
     /**
