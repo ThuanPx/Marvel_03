@@ -67,10 +67,24 @@ public class DialogManagerImpl implements DialogManager {
     }
 
     @Override
-    public void showToast(String toast) {
+    public void showToastInsertSuccess(String toast) {
         @SuppressLint("InflateParams") View view =
                 LayoutInflater.from(mContext).inflate(R.layout.custom_toast, null);
         TextView textView = (TextView) view.findViewById(R.id.text_toast);
+        textView.setText(toast);
+        Toast customToast = new Toast(mContext);
+        customToast.setView(view);
+        customToast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM, Constant.POINT,
+                Constant.POINT);
+        customToast.setDuration(Toast.LENGTH_SHORT);
+        customToast.show();
+    }
+
+    @Override
+    public void showToastDeleteSuccess(String toast) {
+        @SuppressLint("InflateParams") View view =
+                LayoutInflater.from(mContext).inflate(R.layout.custom_toast_delete, null);
+        TextView textView = (TextView) view.findViewById(R.id.text_toast_delete);
         textView.setText(toast);
         Toast customToast = new Toast(mContext);
         customToast.setView(view);

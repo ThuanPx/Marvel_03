@@ -3,6 +3,7 @@ package com.hyperion.ths.marvel_03.ui.favorite;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.util.Log;
+import com.hyperion.ths.marvel_03.R;
 import com.hyperion.ths.marvel_03.data.model.Hero;
 import com.hyperion.ths.marvel_03.data.source.HeroRepository;
 import com.hyperion.ths.marvel_03.ui.BaseViewModel;
@@ -13,8 +14,8 @@ import com.hyperion.ths.marvel_03.utils.navigator.Navigator;
 import com.hyperion.ths.marvel_03.utils.rx.BaseSchedulerProvider;
 import com.hyperion.ths.marvel_03.widget.dialog.DialogManager;
 import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import io.reactivex.observers.DisposableObserver;
 import java.util.List;
 
 /**
@@ -52,7 +53,7 @@ public class FavoriteViewModel extends BaseViewModel implements OnItemClickListe
     }
 
     public void getAllHero() {
-        mHeroRepository.getAllHero()
+        Disposable disposable = mHeroRepository.getAllHero()
                 .subscribeOn(mBaseSchedulerProvider.io())
                 .observeOn(mBaseSchedulerProvider.ui())
                 .subscribe(new Consumer<List<Hero>>() {
@@ -66,6 +67,7 @@ public class FavoriteViewModel extends BaseViewModel implements OnItemClickListe
                         Log.e(TAG, throwable.getLocalizedMessage());
                     }
                 });
+        startDisposable(disposable);
     }
 
     @Override
@@ -78,27 +80,25 @@ public class FavoriteViewModel extends BaseViewModel implements OnItemClickListe
     @Override
     public void onItemFavoriteClick(final Hero hero) {
         mDialogManager.showProgressDialog();
-        mHeroRepository.deleteHero(hero)
+        Disposable disposable = mHeroRepository.deleteHero(hero)
                 .subscribeOn(mBaseSchedulerProvider.io())
                 .observeOn(mBaseSchedulerProvider.ui())
-                .subscribe(new DisposableObserver<Void>() {
+                .subscribe(new Consumer<Hero>() {
                     @Override
-                    public void onNext(@NonNull Void aVoid) {
-
+                    public void accept(@NonNull Hero hero) throws Exception {
+                        mDialogManager.dismissProgressDialog();
+                        mDialogManager.showToastDeleteSuccess(
+                                mNavigator.getActivity().getString(R.string.delete_success));
+                        getAllHero();
                     }
-
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void onError(@NonNull Throwable throwable) {
+                    public void accept(@NonNull Throwable throwable) throws Exception {
                         Log.e(TAG, throwable.getLocalizedMessage());
                         mDialogManager.dismissProgressDialog();
                     }
-
-                    @Override
-                    public void onComplete() {
-                        mDialogManager.dismissProgressDialog();
-                        getAllHero();
-                    }
                 });
+        startDisposable(disposable);
     }
 }
 

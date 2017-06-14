@@ -14,7 +14,9 @@ public interface DialogManager {
 
     void setOnClickDialogListener(ClickDialogListener clickDialogListener);
 
-    void showToast(String toast);
+    void showToastInsertSuccess(String toast);
+
+    void showToastDeleteSuccess(String toast);
 
     /**
      * Click dialog listener

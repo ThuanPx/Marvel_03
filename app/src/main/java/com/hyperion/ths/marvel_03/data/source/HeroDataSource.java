@@ -21,7 +21,7 @@ public interface HeroDataSource {
 
         Observable<Hero> getHeroByName(@NonNull String name);
 
-        Observable<Void> deleteHero(@NonNull Hero hero);
+        Observable<Hero> deleteHero(@NonNull Hero hero);
     }
 
     /**

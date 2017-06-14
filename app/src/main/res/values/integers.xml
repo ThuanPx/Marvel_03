@@ -2,4 +2,5 @@
 <resources>
     <integer name="default_transaction_animation_duration_fade_out">600</integer>
     <integer name="default_transaction_animation_duration_fade_in">400</integer>
+    <integer name="hero_size">200</integer>
 </resources>
