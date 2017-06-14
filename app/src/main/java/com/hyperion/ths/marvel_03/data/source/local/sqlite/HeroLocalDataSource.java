@@ -33,18 +33,18 @@ public class HeroLocalDataSource implements HeroDataSource.LocalDataSource {
     }
 
     @Override
-    public Observable<Void> insertHero(@android.support.annotation.NonNull final Hero hero) {
+    public Observable<Hero> insertHero(@android.support.annotation.NonNull final Hero hero) {
         mDatabase = mDbHelper.getWritableDatabase();
-
-        return Observable.create(new ObservableOnSubscribe<Void>() {
-            @Override
-            public void subscribe(@NonNull ObservableEmitter<Void> e) throws Exception {
-                mDatabase.insert(DatabaseHelper.ContactEntry.TABLE_NAME, null,
-                        hero.getContentValues());
-                mDatabase.close();
-                e.onComplete();
-            }
-        });
+        return Observable.defer(
+                new ObservableJust<ObservableSource<? extends Hero>>(new Observable<Hero>() {
+                    @Override
+                    protected void subscribeActual(Observer<? super Hero> observer) {
+                        mDatabase.insert(DatabaseHelper.ContactEntry.TABLE_NAME, null,
+                                hero.getContentValues());
+                        mDatabase.close();
+                        observer.onNext(hero);
+                    }
+                }));
     }
 
     @Override

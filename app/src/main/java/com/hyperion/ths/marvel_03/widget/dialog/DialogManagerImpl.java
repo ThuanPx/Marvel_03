@@ -1,17 +1,24 @@
 package com.hyperion.ths.marvel_03.widget.dialog;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 import com.hyperion.ths.marvel_03.R;
+import com.hyperion.ths.marvel_03.utils.Constant;
 
 /**
  * Created by ths on 10/06/2017.
  */
 
 public class DialogManagerImpl implements DialogManager {
-    private Context mContext;
+    private final Context mContext;
     private ProgressDialog mProgressDialog;
     private ClickDialogListener mClickDialogListener;
 
@@ -57,6 +64,20 @@ public class DialogManagerImpl implements DialogManager {
     @Override
     public void setOnClickDialogListener(ClickDialogListener clickDialogListener) {
         mClickDialogListener = clickDialogListener;
+    }
+
+    @Override
+    public void showToast(String toast) {
+        @SuppressLint("InflateParams") View view =
+                LayoutInflater.from(mContext).inflate(R.layout.custom_toast, null);
+        TextView textView = (TextView) view.findViewById(R.id.text_toast);
+        textView.setText(toast);
+        Toast customToast = new Toast(mContext);
+        customToast.setView(view);
+        customToast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM, Constant.POINT,
+                Constant.POINT);
+        customToast.setDuration(Toast.LENGTH_SHORT);
+        customToast.show();
     }
 
     @Override

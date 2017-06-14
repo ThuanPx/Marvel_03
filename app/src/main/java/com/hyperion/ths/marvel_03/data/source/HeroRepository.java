@@ -22,7 +22,7 @@ public class HeroRepository {
         return mRemoteDataSource.getAllCharacters(offset, ts, keyApi, hash);
     }
 
-    public Observable<Void> insertHero(Hero hero) {
+    public Observable<Hero> insertHero(Hero hero) {
         return mLocalDataSource.insertHero(hero);
     }
 

@@ -128,7 +128,7 @@ public class HeroViewModel extends BaseViewModel
     @Override
     public void onItemFavoriteClick(final Hero item) {
         mDialogManager.showProgressDialog();
-        mHeroRepository.getHeroByName(item.getName())
+        Disposable disposable = mHeroRepository.getHeroByName(item.getName())
                 .subscribeOn(mBaseSchedulerProvider.io())
                 .observeOn(mBaseSchedulerProvider.ui())
                 .subscribe(new Consumer<Hero>() {
@@ -148,6 +148,7 @@ public class HeroViewModel extends BaseViewModel
                         Log.e(TAG, throwable.getLocalizedMessage());
                     }
                 });
+        startDisposable(disposable);
     }
 
     private void deleteHero(Hero hero) {
@@ -155,29 +156,38 @@ public class HeroViewModel extends BaseViewModel
         mHeroRepository.deleteHero(hero)
                 .subscribeOn(mBaseSchedulerProvider.io())
                 .observeOn(mBaseSchedulerProvider.ui())
-                .subscribe(new Consumer<Void>() {
+                .subscribe(new DisposableObserver<Void>() {
                     @Override
-                    public void accept(@NonNull Void aVoid) throws Exception {
-                        mDialogManager.dismissProgressDialog();
+                    public void onNext(@NonNull Void aVoid) {
+
                     }
-                }, new Consumer<Throwable>() {
+
                     @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception {
+                    public void onError(@NonNull Throwable throwable) {
                         mDialogManager.dismissProgressDialog();
                         Log.e(TAG, throwable.getLocalizedMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        mDialogManager.dismissProgressDialog();
+                        mDialogManager.showToast(
+                                mNavigator.getActivity().getString(R.string.delete_success));
                     }
                 });
     }
 
     private void insertHero(Hero hero) {
         mDialogManager.showProgressDialog();
-        mHeroRepository.insertHero(hero)
+        Disposable disposable = mHeroRepository.insertHero(hero)
                 .subscribeOn(mBaseSchedulerProvider.io())
                 .observeOn(mBaseSchedulerProvider.ui())
-                .subscribe(new Consumer<Void>() {
+                .subscribe(new Consumer<Hero>() {
                     @Override
-                    public void accept(@NonNull Void aVoid) throws Exception {
+                    public void accept(@NonNull Hero hero) throws Exception {
                         mDialogManager.dismissProgressDialog();
+                        mDialogManager.showToast(
+                                mNavigator.getActivity().getString(R.string.insert_success));
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -186,6 +196,7 @@ public class HeroViewModel extends BaseViewModel
                         Log.e(TAG, throwable.getLocalizedMessage());
                     }
                 });
+        startDisposable(disposable);
     }
 
     @Override
