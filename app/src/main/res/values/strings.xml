@@ -8,4 +8,6 @@
     <string name="retry">Retry</string>
     <string name="wait">Please wait…</string>
     <string name="message_error_connect">Please connect to the network</string>
+    <string name="insert_success">Insert Hero  Favorite Success!</string>
+    <string name="delete_success">Delete Hero In Favorite Success!</string>
 </resources>

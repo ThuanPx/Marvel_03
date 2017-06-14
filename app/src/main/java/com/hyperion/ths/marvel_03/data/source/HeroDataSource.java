@@ -15,7 +15,7 @@ public interface HeroDataSource {
      */
     interface LocalDataSource {
 
-        Observable<Void> insertHero(@NonNull Hero hero);
+        Observable<Hero> insertHero(@NonNull Hero hero);
 
         Observable<List<Hero>> getAllHero();
 
