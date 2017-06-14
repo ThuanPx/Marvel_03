@@ -20,8 +20,9 @@ public class HeroRemoteDataSource extends BaseRemoteDataSource
     }
 
     @Override
-    public Observable<List<Hero>> getAllCharacters(Long ts, String keyApi, String hash) {
-        return mMarvelApi.getCharacters(ts, keyApi, hash)
+    public Observable<List<Hero>> getAllCharacters(int offset, Long ts, String keyApi,
+            String hash) {
+        return mMarvelApi.getCharacters(offset, ts, keyApi, hash)
                 .flatMap(new Function<CharactersList, Observable<List<Hero>>>() {
                     @Override
                     public Observable<List<Hero>> apply(@NonNull CharactersList charactersList)

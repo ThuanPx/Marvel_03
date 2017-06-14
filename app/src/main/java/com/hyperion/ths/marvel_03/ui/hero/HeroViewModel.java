@@ -3,6 +3,7 @@ package com.hyperion.ths.marvel_03.ui.hero;
 import android.databinding.Bindable;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
+import android.text.TextUtils;
 import android.util.Log;
 import com.hyperion.ths.marvel_03.BR;
 import com.hyperion.ths.marvel_03.R;
@@ -29,18 +30,23 @@ import java.util.List;
  */
 
 public class HeroViewModel extends BaseViewModel
-        implements OnItemClickListener, DialogManager.ClickDialogListener, OnTextSearchListener {
+        implements OnItemClickListener, DialogManager.ClickDialogListener, OnTextSearchListener,
+        OnLoadMoreListener {
 
     private static final String TAG = HeroViewModel.class.getSimpleName();
-    private HeroRepository mHeroRepository;
+    private final HeroRepository mHeroRepository;
     private BaseSchedulerProvider mBaseSchedulerProvider;
-    private HeroFragmentAdapter mHeroFragmentAdapter;
-    private Navigator mNavigator;
-    private List<Hero> mHeroList;
-    private DialogManager mDialogManager;
+    private final HeroFragmentAdapter mHeroFragmentAdapter;
+    private final Navigator mNavigator;
+    private final List<Hero> mHeroList;
+    private final DialogManager mDialogManager;
     //Method getAllHeroes() is only running one
     private Boolean mIsStart;
     private boolean mRefreshing;
+    private int mOffSet;
+    private boolean mIsLoadMore;
+    public static final int OFFSET_DEFAULT = 20;
+    public static final int MAX_HERO = 1485;
 
     public HeroViewModel(HeroRepository heroRepository, HeroFragmentAdapter heroFragmentAdapter,
             Navigator navigator, DialogManager dialogManager) {
@@ -55,6 +61,9 @@ public class HeroViewModel extends BaseViewModel
         mIsStart = false;
         MainActivity mainActivity = (MainActivity) navigator.getActivity();
         mainActivity.setOnTextSearchListener(this);
+        mHeroFragmentAdapter.setOnLoadMoreListener(this);
+        mOffSet = OFFSET_DEFAULT;
+        mIsLoadMore = true;
     }
 
     public GridLayoutManager getGridLayout() {
@@ -74,33 +83,34 @@ public class HeroViewModel extends BaseViewModel
             return;
         }
         mDialogManager.showProgressDialog();
-        Disposable disposable = mHeroRepository.getAllHero(Constant.TIMESTAMP, Constant.PUBLIC_KEY,
-                Constant.getHashKey())
-                .subscribeOn(mBaseSchedulerProvider.io())
-                .observeOn(mBaseSchedulerProvider.ui())
-                .subscribeWith(new DisposableObserver<List<Hero>>() {
-                    @Override
-                    public void onNext(@NonNull List<Hero> heroesList) {
-                        mHeroList.clear();
-                        mHeroList.addAll(heroesList);
-                        mHeroFragmentAdapter.updateData(mHeroList);
-                    }
+        Disposable disposable =
+                mHeroRepository.getAllHero(Constant.POINT, Constant.TIMESTAMP, Constant.PUBLIC_KEY,
+                        Constant.getHashKey())
+                        .subscribeOn(mBaseSchedulerProvider.io())
+                        .observeOn(mBaseSchedulerProvider.ui())
+                        .subscribeWith(new DisposableObserver<List<Hero>>() {
+                            @Override
+                            public void onNext(@NonNull List<Hero> heroesList) {
+                                mHeroList.clear();
+                                mHeroList.addAll(heroesList);
+                                mHeroFragmentAdapter.updateData(mHeroList);
+                            }
 
-                    @Override
-                    public void onError(@NonNull Throwable throwable) {
-                        mDialogManager.dismissProgressDialog();
-                        mIsStart = true;
-                        mDialogManager.showDialogError(
-                                mNavigator.getActivity().getString(R.string.message_error_connect));
-                        Log.e(TAG, throwable.getLocalizedMessage());
-                    }
+                            @Override
+                            public void onError(@NonNull Throwable throwable) {
+                                mDialogManager.dismissProgressDialog();
+                                mIsStart = true;
+                                mDialogManager.showDialogError(mNavigator.getActivity()
+                                        .getString(R.string.message_error_connect));
+                                Log.e(TAG, throwable.getLocalizedMessage());
+                            }
 
-                    @Override
-                    public void onComplete() {
-                        mDialogManager.dismissProgressDialog();
-                        mIsStart = true;
-                    }
-                });
+                            @Override
+                            public void onComplete() {
+                                mDialogManager.dismissProgressDialog();
+                                mIsStart = true;
+                            }
+                        });
         startDisposable(disposable);
     }
 
@@ -187,32 +197,34 @@ public class HeroViewModel extends BaseViewModel
         }
     }
 
-    public void getAllHeroRefresh() throws UnsupportedEncodingException {
-        Disposable disposable = mHeroRepository.getAllHero(Constant.TIMESTAMP, Constant.PUBLIC_KEY,
-                Constant.getHashKey())
-                .subscribeOn(mBaseSchedulerProvider.io())
-                .observeOn(mBaseSchedulerProvider.ui())
-                .subscribeWith(new DisposableObserver<List<Hero>>() {
-                    @Override
-                    public void onNext(@NonNull List<Hero> heroesList) {
-                        mHeroList.clear();
-                        mHeroList.addAll(heroesList);
-                        mHeroFragmentAdapter.updateData(mHeroList);
-                    }
+    private void getAllHeroRefresh() throws UnsupportedEncodingException {
+        Disposable disposable =
+                mHeroRepository.getAllHero(Constant.POINT, Constant.TIMESTAMP, Constant.PUBLIC_KEY,
+                        Constant.getHashKey())
+                        .subscribeOn(mBaseSchedulerProvider.io())
+                        .observeOn(mBaseSchedulerProvider.ui())
+                        .subscribeWith(new DisposableObserver<List<Hero>>() {
+                            @Override
+                            public void onNext(@NonNull List<Hero> heroesList) {
+                                mHeroList.clear();
+                                mHeroList.addAll(heroesList);
+                                mHeroFragmentAdapter.updateData(mHeroList);
+                            }
 
-                    @Override
-                    public void onError(@NonNull Throwable throwable) {
-                        setRefreshing(false);
-                        mDialogManager.showDialogError(
-                                mNavigator.getActivity().getString(R.string.message_error_connect));
-                        Log.e(TAG, throwable.getLocalizedMessage());
-                    }
+                            @Override
+                            public void onError(@NonNull Throwable throwable) {
+                                setRefreshing(false);
+                                mDialogManager.showDialogError(mNavigator.getActivity()
+                                        .getString(R.string.message_error_connect));
+                                Log.e(TAG, throwable.getLocalizedMessage());
+                            }
 
-                    @Override
-                    public void onComplete() {
-                        setRefreshing(false);
-                    }
-                });
+                            @Override
+                            public void onComplete() {
+                                setRefreshing(false);
+                                mOffSet = OFFSET_DEFAULT;
+                            }
+                        });
         startDisposable(disposable);
     }
 
@@ -236,6 +248,52 @@ public class HeroViewModel extends BaseViewModel
 
     @Override
     public void getTextListener(String text) {
+        mIsLoadMore = TextUtils.isEmpty(text);
         mHeroFragmentAdapter.getFilter().filter(text);
+    }
+
+    @Override
+    public void onLoadMore() {
+        if (!mIsLoadMore) {
+            return;
+        }
+        try {
+            getAllHeroLoadMore();
+        } catch (UnsupportedEncodingException e) {
+            Log.e(TAG, e.getLocalizedMessage());
+        }
+    }
+
+    private void getAllHeroLoadMore() throws UnsupportedEncodingException {
+        if (mOffSet == MAX_HERO) {
+            return;
+        }
+        mDialogManager.showProgressDialog();
+        Disposable disposable =
+                mHeroRepository.getAllHero(mOffSet, Constant.TIMESTAMP, Constant.PUBLIC_KEY,
+                        Constant.getHashKey())
+                        .subscribeOn(mBaseSchedulerProvider.io())
+                        .observeOn(mBaseSchedulerProvider.ui())
+                        .subscribeWith(new DisposableObserver<List<Hero>>() {
+                            @Override
+                            public void onNext(@NonNull List<Hero> heroesList) {
+                                mHeroList.addAll(heroesList);
+                                mHeroFragmentAdapter.updateData(mHeroList);
+                            }
+
+                            @Override
+                            public void onError(@NonNull Throwable throwable) {
+                                mDialogManager.showDialogError(mNavigator.getActivity()
+                                        .getString(R.string.message_error_connect));
+                                Log.e(TAG, throwable.getLocalizedMessage());
+                            }
+
+                            @Override
+                            public void onComplete() {
+                                mDialogManager.dismissProgressDialog();
+                                mOffSet += OFFSET_DEFAULT;
+                            }
+                        });
+        startDisposable(disposable);
     }
 }

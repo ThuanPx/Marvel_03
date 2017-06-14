@@ -34,6 +34,10 @@ public class HeroFragmentAdapter extends RecyclerView.Adapter<HeroFragmentAdapte
     private HeroRepository mHeroRepository;
     private boolean mFavorite;
     private boolean mIsStore;
+    private OnLoadMoreListener mOnLoadMoreListener;
+    boolean mIsLoading = false, mIsMoreDataAvailable = true;
+    public static final int TYPE_HERO = 0;
+    public static final int TYPE_LOAD = 1;
 
     public HeroFragmentAdapter(HeroRepository heroRepository) {
         mHeroList = new ArrayList<>();
@@ -47,12 +51,17 @@ public class HeroFragmentAdapter extends RecyclerView.Adapter<HeroFragmentAdapte
         mOnRecyclerViewItemClickListener = onRecyclerViewItemClickListener;
     }
 
+    public void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener) {
+        mOnLoadMoreListener = onLoadMoreListener;
+    }
+
     public void setOnItemButtonClickListener(OnItemClickListener onItemButtonClickListener) {
         mOnItemButtonClickListener = onItemButtonClickListener;
     }
 
     public void updateData(List<Hero> heroList) {
         if (!mIsStore) {
+            mHeroListStore.clear();
             mHeroListStore.addAll(heroList);
             mIsStore = true;
         }
@@ -90,7 +99,28 @@ public class HeroFragmentAdapter extends RecyclerView.Adapter<HeroFragmentAdapte
 
     @Override
     public void onBindViewHolder(ItemViewHolder holder, int position) {
-        holder.bindData(mHeroList.get(position), getFavorite(mHeroList.get(position).getName()));
+        if (position >= getItemCount() - 1
+                && mIsMoreDataAvailable
+                && !mIsLoading
+                && mOnLoadMoreListener != null) {
+            mIsLoading = true;
+            mIsStore = false;
+            mOnLoadMoreListener.onLoadMore();
+        }
+        if (getItemViewType(position) == TYPE_HERO) {
+            holder.bindData(mHeroList.get(position),
+                    getFavorite(mHeroList.get(position).getName()));
+            mIsLoading = false;
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (mHeroList.get(position).getId() == Constant.POINT) {
+            return TYPE_LOAD;
+        } else {
+            return TYPE_HERO;
+        }
     }
 
     @Override
