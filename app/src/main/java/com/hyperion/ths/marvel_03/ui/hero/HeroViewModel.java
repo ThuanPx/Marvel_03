@@ -153,28 +153,24 @@ public class HeroViewModel extends BaseViewModel
 
     private void deleteHero(Hero hero) {
         mDialogManager.showProgressDialog();
-        mHeroRepository.deleteHero(hero)
+        Disposable disposable = mHeroRepository.deleteHero(hero)
                 .subscribeOn(mBaseSchedulerProvider.io())
                 .observeOn(mBaseSchedulerProvider.ui())
-                .subscribe(new DisposableObserver<Void>() {
+                .subscribe(new Consumer<Hero>() {
                     @Override
-                    public void onNext(@NonNull Void aVoid) {
-
+                    public void accept(@NonNull Hero hero) throws Exception {
+                        mDialogManager.dismissProgressDialog();
+                        mDialogManager.showToastDeleteSuccess(
+                                mNavigator.getActivity().getString(R.string.delete_success));
                     }
-
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void onError(@NonNull Throwable throwable) {
+                    public void accept(@NonNull Throwable throwable) throws Exception {
                         mDialogManager.dismissProgressDialog();
                         Log.e(TAG, throwable.getLocalizedMessage());
                     }
-
-                    @Override
-                    public void onComplete() {
-                        mDialogManager.dismissProgressDialog();
-                        mDialogManager.showToast(
-                                mNavigator.getActivity().getString(R.string.delete_success));
-                    }
                 });
+        startDisposable(disposable);
     }
 
     private void insertHero(Hero hero) {
@@ -186,7 +182,7 @@ public class HeroViewModel extends BaseViewModel
                     @Override
                     public void accept(@NonNull Hero hero) throws Exception {
                         mDialogManager.dismissProgressDialog();
-                        mDialogManager.showToast(
+                        mDialogManager.showToastInsertSuccess(
                                 mNavigator.getActivity().getString(R.string.insert_success));
                     }
                 }, new Consumer<Throwable>() {

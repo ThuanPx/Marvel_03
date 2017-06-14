@@ -123,16 +123,17 @@ public class HeroLocalDataSource implements HeroDataSource.LocalDataSource {
     }
 
     @Override
-    public Observable<Void> deleteHero(@android.support.annotation.NonNull final Hero hero) {
+    public Observable<Hero> deleteHero(@android.support.annotation.NonNull final Hero hero) {
         mDatabase = mDbHelper.getWritableDatabase();
         return Observable.defer(
-                new ObservableJust<ObservableSource<? extends Void>>(new Observable<Void>() {
+                new ObservableJust<ObservableSource<? extends Hero>>(new Observable<Hero>() {
 
                     @Override
-                    protected void subscribeActual(Observer<? super Void> observer) {
+                    protected void subscribeActual(Observer<? super Hero> observer) {
                         mDatabase.delete(DatabaseHelper.ContactEntry.TABLE_NAME,
                                 DatabaseHelper.ContactEntry.COLUMN_ID + " = ?",
                                 new String[] { String.valueOf(hero.getId()) });
+                        observer.onNext(hero);
                         mDatabase.close();
                         observer.onComplete();
                     }

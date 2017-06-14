@@ -34,7 +34,7 @@ public class HeroRepository {
         return mLocalDataSource.getHeroByName(name);
     }
 
-    public Observable<Void> deleteHero(Hero hero) {
+    public Observable<Hero> deleteHero(Hero hero) {
         return mLocalDataSource.deleteHero(hero);
     }
 }
