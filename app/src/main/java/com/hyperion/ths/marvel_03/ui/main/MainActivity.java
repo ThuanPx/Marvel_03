@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import com.hyperion.ths.marvel_03.R;
 import com.hyperion.ths.marvel_03.connection.MainReceiver;
 import com.hyperion.ths.marvel_03.databinding.ActivityMainBinding;
+import com.hyperion.ths.marvel_03.ui.favorite.OnTextSearchFavoriteListener;
 import com.hyperion.ths.marvel_03.ui.hero.OnTextSearchListener;
 
 import static android.net.ConnectivityManager.CONNECTIVITY_ACTION;
@@ -23,6 +24,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private MainReceiver mMainReceiver;
     private SearchView mSearchView;
     private OnTextSearchListener mOnTextSearchListener;
+    private OnTextSearchFavoriteListener mOnTextSearchFavoriteListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +35,11 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         mMainReceiver = new MainReceiver();
         mMainViewModel = new MainViewModel(mainViewPageAdapter, mMainReceiver);
         binding.setViewModel(mMainViewModel);
+    }
+
+    public void setOnTextSearchFavoriteListener(
+            OnTextSearchFavoriteListener onTextSearchFavoriteListener) {
+        mOnTextSearchFavoriteListener = onTextSearchFavoriteListener;
     }
 
     public void setOnTextSearchListener(OnTextSearchListener onTextSearchListener) {
@@ -56,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     @Override
     public boolean onQueryTextChange(String newText) {
         mOnTextSearchListener.getTextListener(newText);
+        mOnTextSearchFavoriteListener.getTextListener(newText);
         return true;
     }
 

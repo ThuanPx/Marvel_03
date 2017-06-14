@@ -1,5 +1,6 @@
 package com.hyperion.ths.marvel_03.ui.favorite;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.util.Log;
@@ -9,6 +10,7 @@ import com.hyperion.ths.marvel_03.data.source.HeroRepository;
 import com.hyperion.ths.marvel_03.ui.BaseViewModel;
 import com.hyperion.ths.marvel_03.ui.OnItemClickListener;
 import com.hyperion.ths.marvel_03.ui.heroinfo.HeroInfoActivity;
+import com.hyperion.ths.marvel_03.ui.main.MainActivity;
 import com.hyperion.ths.marvel_03.utils.Constant;
 import com.hyperion.ths.marvel_03.utils.navigator.Navigator;
 import com.hyperion.ths.marvel_03.utils.rx.BaseSchedulerProvider;
@@ -22,7 +24,8 @@ import java.util.List;
  * Created by ths on 06/06/2017.
  */
 
-public class FavoriteViewModel extends BaseViewModel implements OnItemClickListener {
+public class FavoriteViewModel extends BaseViewModel
+        implements OnItemClickListener, OnTextSearchFavoriteListener {
     private static final String TAG = FavoriteViewModel.class.getSimpleName();
     private FavoriteFragmentAdapter mFavoriteFragmentAdapter;
     private HeroRepository mHeroRepository;
@@ -38,6 +41,10 @@ public class FavoriteViewModel extends BaseViewModel implements OnItemClickListe
         mHeroRepository = heroRepository;
         mNavigator = navigator;
         mDialogManager = dialogManager;
+        Activity activity = navigator.getActivity();
+        if (activity instanceof MainActivity) {
+            ((MainActivity) activity).setOnTextSearchFavoriteListener(this);
+        }
     }
 
     public FavoriteFragmentAdapter getAdapter() {
@@ -99,6 +106,11 @@ public class FavoriteViewModel extends BaseViewModel implements OnItemClickListe
                     }
                 });
         startDisposable(disposable);
+    }
+
+    @Override
+    public void getTextListener(String text) {
+        mFavoriteFragmentAdapter.getFilter().filter(text);
     }
 }
 
