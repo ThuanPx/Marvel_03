@@ -30,5 +30,8 @@ public interface HeroDataSource {
     interface RemoteDataSource {
         Observable<List<Hero>> getAllCharacters(@NonNull int offset, Long ts, String keyApi,
                 String hash);
+
+        Observable<List<Hero>> getCharactersByName(@NonNull String name, Long ts, String keyApi,
+                String hash);
     }
 }

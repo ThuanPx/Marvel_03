@@ -22,6 +22,11 @@ public class HeroRepository {
         return mRemoteDataSource.getAllCharacters(offset, ts, keyApi, hash);
     }
 
+    public Observable<List<Hero>> getCharacterByName(String name, long ts, String keyApi,
+            String hash) {
+        return mRemoteDataSource.getCharactersByName(name, ts, keyApi, hash);
+    }
+
     public Observable<Hero> insertHero(Hero hero) {
         return mLocalDataSource.insertHero(hero);
     }
