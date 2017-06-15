@@ -135,15 +135,15 @@ public class HeroFragmentAdapter extends RecyclerView.Adapter<HeroFragmentAdapte
             protected FilterResults performFiltering(CharSequence charSequence) {
                 String charString = charSequence.toString();
                 if (charString.isEmpty()) {
-                    mHeroList = mHeroListStore;
+                    mHeroList.clear();
+                    mHeroList.addAll(mHeroListStore);
                 } else {
-                    List<Hero> filteredList = new ArrayList<>();
+                    mHeroList.clear();
                     for (Hero hero : mHeroListStore) {
                         if (hero.getName().toLowerCase(Locale.getDefault()).contains(charString)) {
-                            filteredList.add(hero);
+                            mHeroList.add(hero);
                         }
                     }
-                    mHeroList = filteredList;
                 }
                 FilterResults filterResults = new FilterResults();
                 filterResults.values = mHeroList;

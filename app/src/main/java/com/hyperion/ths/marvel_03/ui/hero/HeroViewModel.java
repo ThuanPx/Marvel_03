@@ -1,5 +1,6 @@
 package com.hyperion.ths.marvel_03.ui.hero;
 
+import android.app.Activity;
 import android.databinding.Bindable;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -59,8 +60,10 @@ public class HeroViewModel extends BaseViewModel
         mDialogManager = dialogManager;
         mDialogManager.setOnClickDialogListener(HeroViewModel.this);
         mIsStart = false;
-        MainActivity mainActivity = (MainActivity) navigator.getActivity();
-        mainActivity.setOnTextSearchListener(this);
+        Activity activity = navigator.getActivity();
+        if (activity instanceof MainActivity) {
+            ((MainActivity) activity).setOnTextSearchListener(this);
+        }
         mHeroFragmentAdapter.setOnLoadMoreListener(this);
         mOffSet = OFFSET_DEFAULT;
         mIsLoadMore = true;

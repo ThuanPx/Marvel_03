@@ -34,7 +34,7 @@ public class FavoriteFragment extends Fragment {
                 new HeroRepository(null, new HeroLocalDataSource(getActivity()));
         Navigator navigator = new Navigator(getActivity());
         FavoriteFragmentAdapter favoriteFragmentAdapter =
-                new FavoriteFragmentAdapter(getActivity(), heroRepository);
+                new FavoriteFragmentAdapter(getActivity());
         DialogManager dialogManager = new DialogManagerImpl(getContext());
         mFavoriteViewModel =
                 new FavoriteViewModel(favoriteFragmentAdapter, heroRepository, navigator,
@@ -52,5 +52,11 @@ public class FavoriteFragment extends Fragment {
             return;
         }
         mFavoriteViewModel.getAllHero();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mFavoriteViewModel.onStop();
     }
 }
