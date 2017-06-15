@@ -56,7 +56,7 @@ public class FavoriteFragment extends Fragment {
 
     @Override
     public void onStop() {
-        super.onStop();
         mFavoriteViewModel.onStop();
+        super.onStop();
     }
 }
