@@ -259,7 +259,39 @@ public class HeroViewModel extends BaseViewModel
     @Override
     public void getTextListener(String text) {
         mIsLoadMore = TextUtils.isEmpty(text);
-        mHeroFragmentAdapter.getFilter().filter(text);
+        if (mIsLoadMore) {
+            mHeroFragmentAdapter.updateData(mHeroList);
+        } else {
+            searchCharacterByName(text);
+        }
+    }
+
+    private void searchCharacterByName(String name) {
+        mDialogManager.showProgressDialog();
+        try {
+            mHeroRepository.getCharacterByName(name, Constant.TIMESTAMP, Constant.PUBLIC_KEY,
+                    Constant.getHashKey())
+                    .subscribeOn(mBaseSchedulerProvider.io())
+                    .observeOn(mBaseSchedulerProvider.ui())
+                    .subscribeWith(new DisposableObserver<List<Hero>>() {
+                        @Override
+                        public void onNext(@NonNull List<Hero> hero) {
+                            mHeroFragmentAdapter.updateData(hero);
+                        }
+
+                        @Override
+                        public void onError(@NonNull Throwable e) {
+                            Log.e(TAG, e.getLocalizedMessage());
+                        }
+
+                        @Override
+                        public void onComplete() {
+                            mDialogManager.dismissProgressDialog();
+                        }
+                    });
+        } catch (UnsupportedEncodingException e) {
+            Log.e(TAG, e.getLocalizedMessage());
+        }
     }
 
     @Override

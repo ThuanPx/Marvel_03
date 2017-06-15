@@ -34,4 +34,21 @@ public class HeroRemoteDataSource extends BaseRemoteDataSource
                     }
                 });
     }
+
+    @Override
+    public Observable<List<Hero>> getCharactersByName(String name, Long ts, String keyApi,
+            String hash) {
+        return mMarvelApi.getCharactersName(name, ts, keyApi, hash)
+                .flatMap(new Function<CharactersList, Observable<List<Hero>>>() {
+
+                    @Override
+                    public Observable<List<Hero>> apply(@NonNull CharactersList charactersList)
+                            throws Exception {
+                        if (charactersList != null) {
+                            return Observable.just(charactersList.getHeroesLists().getHeroes());
+                        }
+                        return Observable.error(new NullPointerException());
+                    }
+                });
+    }
 }
