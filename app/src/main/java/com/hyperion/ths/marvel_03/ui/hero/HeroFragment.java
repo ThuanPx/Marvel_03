@@ -60,9 +60,18 @@ public class HeroFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (mHeroViewModel == null) {
+            return;
+        }
+        mHeroViewModel.reLoadList();
+    }
+
+    @Override
     public void onStop() {
-        super.onStop();
         mHeroViewModel.onStop();
+        super.onStop();
     }
 
     @Override

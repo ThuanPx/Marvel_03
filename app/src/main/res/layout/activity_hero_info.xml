@@ -40,6 +40,22 @@
                 app:upWithViewPageHeroInfo="@{(pager)}"
                 style="@style/AppTabLayout"
                 />
+            <com.sackcentury.shinebuttonlib.ShineButton
+                android:id="@+id/sb_image3"
+                android:layout_width="@dimen/dp_30"
+                android:layout_height="@dimen/dp_30"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="@dimen/dp_11"
+                android:layout_toEndOf="@+id/pager"
+                android:layout_toRightOf="@+id/pager"
+                android:onClick="@{viewModel::clickButtonFavoriteHeroInfo}"
+                android:src="@android:color/darker_gray"
+                app:allow_random_color="true"
+                app:btn_color="@android:color/darker_gray"
+                app:btn_fill_color="@color/colorPrimary"
+                app:buttonFavorite="@{viewModel.favorite}"
+                app:siShape="@raw/heart"
+                />
         </RelativeLayout>
         <FrameLayout
             android:layout_width="match_parent"
